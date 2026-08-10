@@ -1,0 +1,6 @@
+{
+  "name": "Flutter UI Studio - Gestão Esportiva",
+  "description": "Estúdio de prototipagem visual e gerador de código Flutter (Material 3) para a Plataforma de Gestão Esportiva (Prescrição de Treinos, Zonas, Aderência, Financeiro PIX e LGPD).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
