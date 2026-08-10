@@ -25,70 +25,15 @@ import {
 
 const INITIAL_SCREENS: ScreenConfig[] = [
   {
-    id: 'login',
-    title: 'Cadastro Autônomo & Vínculo (Épico 1)',
-    subtitle: 'Cadastro Autônomo E1-01, Handle @ & Token F-02',
-    iconName: 'Lock',
-    showAppBar: true,
-    showBottomNav: false,
-    showFAB: false,
-    showDrawer: false,
-    appBarTitle: 'Acesso & Convites',
-  },
-  {
-    id: 'dashboard',
-    title: 'Painel da Assessoria (Score & Aderência)',
-    subtitle: 'Score F-03, Métricas, Treinos & Finanças',
-    iconName: 'LayoutDashboard',
-    showAppBar: true,
-    showBottomNav: true,
-    showFAB: true,
-    showDrawer: true,
-    appBarTitle: 'Painel da Assessoria',
-  },
-  {
-    id: 'products',
-    title: 'Gestão de Atletas & Grupos (Épico 2)',
-    subtitle: 'Busca por Handle, Zonas & Grupos N:N',
-    iconName: 'Users',
+    id: 'custom',
+    title: 'Nova Tela',
+    subtitle: 'Protótipo Vazio',
+    iconName: 'Layout',
     showAppBar: true,
     showBottomNav: true,
     showFAB: true,
     showDrawer: false,
-    appBarTitle: 'Atletas & Pelotões',
-  },
-  {
-    id: 'form',
-    title: 'Prescrição Estruturada & Zonas (Épico 3)',
-    subtitle: 'Etapas de Esforço, Teste 3k/FTP & Zonas F-01',
-    iconName: 'Activity',
-    showAppBar: true,
-    showBottomNav: false,
-    showFAB: false,
-    showDrawer: false,
-    appBarTitle: 'Prescrever Treino',
-  },
-  {
-    id: 'chat',
-    title: 'Chat 1:1 & Feedbacks RPE (Épico 5)',
-    subtitle: 'Contexto de Treino, RPE 1-10 & Notificações',
-    iconName: 'MessageSquare',
-    showAppBar: true,
-    showBottomNav: false,
-    showFAB: false,
-    showDrawer: false,
-    appBarTitle: 'Chat & Feedback',
-  },
-  {
-    id: 'settings',
-    title: 'Cobrança PIX, LGPD & Drive (Épico 6 & 7)',
-    subtitle: 'Régua F-06, Consent Log E7 & Export F-09',
-    iconName: 'Settings',
-    showAppBar: true,
-    showBottomNav: true,
-    showFAB: false,
-    showDrawer: false,
-    appBarTitle: 'Gestão & Privacidade',
+    appBarTitle: 'Nova Tela',
   },
 ];
 
@@ -97,7 +42,7 @@ export default function App() {
   const [themeMode, setThemeMode] = useState<ThemeMode>('light');
   const [activePalette, setActivePalette] = useState<PaletteOption>(COLOR_PALETTES[0]);
   const [activeView, setActiveView] = useState<'prototype' | 'code'>('prototype');
-  const [activeScreenId, setActiveScreenId] = useState<ScreenType>('dashboard');
+  const [activeScreenId, setActiveScreenId] = useState<ScreenType>('custom');
   const [screens, setScreens] = useState<ScreenConfig[]>(INITIAL_SCREENS);
 
   const [isAiPromptOpen, setIsAiPromptOpen] = useState(false);
@@ -143,40 +88,6 @@ export default function App() {
 
       {/* Main Workspace Body */}
       <main className="max-w-7xl mx-auto p-4 md:p-6 flex flex-col gap-6">
-        {/* Banner Informando a Resposta do Ambiente AI Studio */}
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-900/90 via-slate-900 to-teal-900 text-white shadow-md border border-blue-800/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-600/30 border border-blue-400/40 flex items-center justify-center shrink-0 mt-0.5">
-              <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-            </div>
-            <div>
-              <h2 className="font-bold text-sm md:text-base tracking-tight text-white flex items-center gap-2">
-                Sim! Este é o ambiente ideal para criar seus protótipos Flutter & Gemini
-              </h2>
-              <p className="text-xs text-blue-100/80 mt-1 leading-relaxed max-w-3xl">
-                Você pode projetar a interface visual responsiva (Android, iOS e Web), testar o suporte a Modo Claro/Escuro com a paleta Material 3 Luna Ocean (#54ACBF, #26658C, #011C40), gerar o código Dart correspondente e exportar tudo diretamente para o seu repositório no GitHub ou Google Antigravity IDE.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 w-full md:w-auto shrink-0">
-            <button
-              onClick={() => setIsAiPromptOpen(true)}
-              className="w-full md:w-auto px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              Prompt AI com Gemini
-            </button>
-            <button
-              onClick={() => setIsGithubModalOpen(true)}
-              className="w-full md:w-auto px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition flex items-center justify-center gap-1.5"
-            >
-              <Github className="w-3.5 h-3.5" />
-              Guia GitHub
-            </button>
-          </div>
-        </div>
-
         {/* Main Grid View */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Theme & Screen Customizer */}
