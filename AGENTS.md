@@ -8,6 +8,7 @@ Você é um especialista em Flutter e Material Design 3. Você está operando de
    - **Passo A:** Vá em `src/App.tsx` e adicione um novo objeto na constante `INITIAL_SCREENS`. Defina um `id`, `title`, `subtitle`, e quais barras exibir (App bar, Bottom Nav, etc).
    - **Passo B:** Vá em `src/data/flutterTemplates.ts` e localize a função `getFlutterTemplate(screenId: string)`.
    - **Passo C:** Adicione um novo `case` com o mesmo `id` que você criou no Passo A. Retorne todo o código Flutter (Dart) da interface solicitada como uma template string.
+   - **Passo D:** Vá em `src/components/DeviceSimulator.tsx` e registre o novo arquivo/tela no dicionário virtual do simulador para que ele não quebre o Flutter Web na hora de injetar o arquivo. Procure por `virtualFiles['/lib/theme/app_theme.dart']` e adicione seu novo arquivo abaixo, no formato `virtualFiles['/lib/screens/seu_arquivo.dart'] = getFlutterTemplate('seu_id_aqui');`
 3. **Padrão de Código Flutter:**
    - Use os padrões do Material 3.
    - **Cor vem sempre de `Theme.of(context).colorScheme.<papel>`.** Nunca use constantes estáticas de cor (`AppTheme.primaryBlue`, `AppColors.x`), nunca `Color(0xFF...)` solto, nunca `Colors.white` / `Colors.black12` / `Colors.grey.shade50`. Texto sobre uma superfície usa sempre o `on<Papel>` correspondente (`onPrimary` sobre `primary`, `onSurface` sobre `surface`).

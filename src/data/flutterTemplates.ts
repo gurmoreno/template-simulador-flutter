@@ -13,9 +13,9 @@ export const COLOR_PALETTES: PaletteOption[] = [
     secondary: '#54ACBF', // Ciano — destaque
     accentGreen: '#A7EBF2', // Ciano Suave
     neutralGray: '#023859', // Azul Escuro Slate
-    surfaceLight: '#FFFFFF',
+    surfaceLight: '#F7FAFC',
     surfaceDark: '#023859',
-    backgroundLight: '#EBF8FA',
+    backgroundLight: '#FCFDFE',
     backgroundDark: '#011C40',
   },
   {
@@ -57,138 +57,277 @@ export const COLOR_PALETTES: PaletteOption[] = [
 ];
 
 export function generateFlutterThemeCode(palette: PaletteOption): string {
-  return `import 'package:flutter/material.dart';
+  return `// =============================================================================
+// FONTE ÚNICA DE VERDADE VISUAL — Run Forest Run
+// =============================================================================
+// Este arquivo é CONGELADO. Nenhum gerador de código (Google AI Studio,
+// Antigravity) deve redefinir cores, raios, tipografia ou tamanhos de botão.
+// Telas devem IMPORTAR este tema e consumir apenas Theme.of(context).
+//
+// Alterações aqui são decisão de produto e passam por revisão. Ver TOKENS.md
+// para o racional de cada escolha (inclusive as medições de contraste).
+// =============================================================================
 
-class AppTheme {
-  // Configuração da Paleta de Cores Material 3 (Azul, Verde, Cinza)
-  static const Color primaryBlue = Color(0xFF${palette.primary.replace('#', '')});
-  static const Color secondaryGreen = Color(0xFF${palette.secondary.replace('#', '')});
-  static const Color neutralGray = Color(0xFF${palette.neutralGray.replace('#', '')});
+import 'package:flutter/material.dart';
 
-  // Tema Claro (Light Mode)
-  static ThemeData get lightTheme {
+/// Paleta Luna Ocean — os valores brutos.
+///
+/// ATENÇÃO: fora deste arquivo, NÃO use estas constantes. Use
+/// \`Theme.of(context).colorScheme.<papel>\`. As constantes existem apenas para
+/// alimentar o ColorScheme abaixo.
+abstract final class LunaOcean {
+  /// Ciano. Contraste com branco = 2.62:1 → REPROVA WCAG AA.
+  /// Nunca usar como fundo de texto branco. É cor de destaque sobre escuro
+  /// (6.47:1 contra o azul-noite) e serve como \`secondary\` no tema claro.
+  static const Color ciano = Color(0xFF54ACBF);
+
+  /// Azul médio. Contraste com branco = 6.32:1 → APROVA WCAG AA.
+  /// É a cor de ação primária do produto no tema claro.
+  static const Color azulMedio = Color(0xFF26658C);
+
+  /// Azul profundo. Contraste com branco = 12.26:1.
+  /// Superfície elevada do tema escuro.
+  static const Color azulProfundo = Color(0xFF023859);
+
+  /// Azul-noite. Contraste com branco = 16.92:1.
+  /// Fundo do tema escuro e cor de texto de maior ênfase no tema claro.
+  static const Color azulNoite = Color(0xFF011C40);
+}
+
+/// Escala de espaçamento — múltiplos de 8, sem exceção.
+///
+/// Use \`AppSpacing.md\` em vez de \`16\`. Um número solto num Padding é um bug
+/// de design system, não um detalhe.
+abstract final class AppSpacing {
+  static const double xs = 4;
+  static const double sm = 8;
+  static const double md = 16;
+  static const double lg = 24;
+  static const double xl = 32;
+  static const double xxl = 48;
+  static const double xxxl = 64;
+}
+
+/// Raios de canto. Três valores, e só.
+abstract final class AppRadius {
+  /// Checkbox, badges pequenos.
+  static const double xs = 4;
+
+  /// Campos, botões, chips.
+  static const double sm = 12;
+
+  /// Cards e superfícies de conteúdo.
+  static const double md = 16;
+
+  /// Bottom sheets e diálogos.
+  static const double lg = 28;
+}
+
+/// Larguras máximas de conteúdo por breakpoint.
+///
+/// O produto roda em Android, iOS e Web. Formulário esticado de ponta a ponta
+/// num monitor de 1920px é o defeito mais comum de Flutter Web — use
+/// [AppBreakpoints.formMaxWidth] em todo fluxo de formulário.
+abstract final class AppBreakpoints {
+  /// Abaixo disso, layout de uma coluna (celular).
+  static const double compact = 600;
+
+  /// Entre compact e expanded: tablet / janela estreita.
+  static const double medium = 840;
+
+  /// Acima disso, layout de painel (web do treinador).
+  static const double expanded = 1200;
+
+  /// Formulários nunca passam disso, em nenhuma tela.
+  static const double formMaxWidth = 480;
+
+  /// Conteúdo de leitura (listas, detalhe de treino).
+  static const double contentMaxWidth = 840;
+}
+
+abstract final class AppTheme {
+  // ---------------------------------------------------------------------------
+  // TEMA CLARO
+  // ---------------------------------------------------------------------------
+  static ThemeData get light => _build(_lightScheme);
+
+  static final ColorScheme _lightScheme = ColorScheme.fromSeed(
+    seedColor: LunaOcean.azulMedio,
+    brightness: Brightness.light,
+    // Papéis fixados à mão — o fromSeed sozinho não respeita a paleta da marca.
+    primary: LunaOcean.azulMedio,
+    onPrimary: Colors.white,
+    secondary: LunaOcean.ciano,
+    // Texto sobre ciano precisa ser escuro: branco sobre ciano é 2.62:1.
+    onSecondary: LunaOcean.azulNoite,
+    surface: const Color(0xFFFCFDFE),
+    onSurface: LunaOcean.azulNoite,
+    // 5.25:1 sobre o fill do campo — rótulo e helper são texto, pedem 4.5:1.
+    onSurfaceVariant: const Color(0xFF5A6B7A),
+    surfaceContainerLowest: Colors.white,
+    surfaceContainerLow: const Color(0xFFF7FAFC),
+    surfaceContainer: const Color(0xFFF1F5F9),
+    surfaceContainerHigh: const Color(0xFFE8EFF4),
+    surfaceContainerHighest: const Color(0xFFDFE9F0),
+    outline: const Color(0xFF7A8B99),
+    outlineVariant: const Color(0xFFC7D3DC),
+  );
+
+  // ---------------------------------------------------------------------------
+  // TEMA ESCURO
+  // ---------------------------------------------------------------------------
+  // O atleta abre o app de madrugada e ao sol. O modo escuro não é enfeite —
+  // é o modo em que metade dos usuários vai viver. Ele NÃO pode sumir.
+  static ThemeData get dark => _build(_darkScheme);
+
+  static final ColorScheme _darkScheme = ColorScheme.fromSeed(
+    seedColor: LunaOcean.azulMedio,
+    brightness: Brightness.dark,
+    // No escuro os papéis invertem: o ciano é quem tem contraste (6.47:1
+    // contra o azul-noite), então ele vira a ação primária.
+    primary: LunaOcean.ciano,
+    onPrimary: LunaOcean.azulNoite,
+    secondary: const Color(0xFF8FD0DE),
+    onSecondary: LunaOcean.azulNoite,
+    surface: LunaOcean.azulNoite,
+    onSurface: const Color(0xFFE3ECF2),
+    // 8.12:1 sobre o fill do campo no escuro.
+    onSurfaceVariant: const Color(0xFFA9BECD),
+    surfaceContainerLowest: const Color(0xFF00142E),
+    surfaceContainerLow: const Color(0xFF01234C),
+    surfaceContainer: LunaOcean.azulProfundo,
+    surfaceContainerHigh: const Color(0xFF0B4468),
+    surfaceContainerHighest: const Color(0xFF13527A),
+    outline: const Color(0xFF7E97AB),
+    outlineVariant: const Color(0xFF31506B),
+  );
+
+  // ---------------------------------------------------------------------------
+  // CONSTRUÇÃO COMPARTILHADA
+  // ---------------------------------------------------------------------------
+  // Claro e escuro compartilham TODA a estrutura. A única diferença permitida
+  // entre eles é o ColorScheme. Foi divergir daqui que produziu dois temas
+  // incompatíveis nos primeiros protótipos.
+  static ThemeData _build(ColorScheme scheme) {
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.light,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryBlue,
-        primary: primaryBlue,
-        secondary: secondaryGreen,
-        surface: const Color(0xFF${palette.surfaceLight.replace('#', '')}),
-        brightness: Brightness.light,
-      ),
-      scaffoldBackgroundColor: const Color(0xFF${palette.backgroundLight.replace('#', '')}),
-      appBarTheme: const AppBarTheme(
-        centerTitle: true,
+      colorScheme: scheme,
+      scaffoldBackgroundColor: scheme.surface,
+
+      appBarTheme: AppBarTheme(
+        centerTitle: false,
         elevation: 0,
-        scrolledUnderElevation: 2,
-        backgroundColor: Color(0xFF${palette.surfaceLight.replace('#', '')}),
-        titleTextStyle: TextStyle(
-          color: Color(0xFF0F172A),
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-        ),
+        scrolledUnderElevation: 3,
+        backgroundColor: scheme.surface,
+        foregroundColor: scheme.onSurface,
+        surfaceTintColor: scheme.surfaceTint,
       ),
-      cardTheme: CardTheme(
-        elevation: 1,
+
+      cardTheme: CardThemeData(
+        elevation: 0,
+        color: scheme.surfaceContainerLow,
+        margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          side: BorderSide(color: scheme.outlineVariant),
         ),
       ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryBlue,
-          foregroundColor: Colors.white,
-          minimumSize: const Size.fromHeight(52),
+
+      // Altura 48 é o mínimo de acessibilidade para alvo de toque.
+      // Não use Size.fromHeight aqui: largura infinita quebra botões em Row.
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(64, 48),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+            borderRadius: BorderRadius.circular(AppRadius.sm),
           ),
         ),
       ),
+
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(64, 48),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.sm),
+          ),
+        ),
+      ),
+
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          minimumSize: const Size(48, 48),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.sm),
+          ),
+        ),
+      ),
+
+      // Campo no padrão FILLED do M3: preenchimento sutil, cantos superiores
+      // arredondados, indicador na base. Sem caixa fechada em volta — é o
+      // visual limpo pedido, e é a variante canônica do Material 3.
+      //
+      // O indicador inativo NUNCA é BorderSide.none. O fill sozinho dá 1.03:1
+      // contra a surface: como demarcação ele é invisível, e o usuário perde a
+      // referência de onde tocar. Ver TOKENS.md §7.
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+        fillColor: scheme.surfaceContainerLow,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.md,
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+        // outline: 3.35:1 claro / 5.13:1 escuro contra o fill.
+        border: _inputBorder(scheme.outline),
+        enabledBorder: _inputBorder(scheme.outline),
+        // primary: 6.03:1 claro / 5.97:1 escuro.
+        focusedBorder: _inputBorder(scheme.primary, width: 2),
+        errorBorder: _inputBorder(scheme.error),
+        focusedErrorBorder: _inputBorder(scheme.error, width: 2),
+        disabledBorder: _inputBorder(scheme.onSurface.withValues(alpha: 0.38)),
+        // Rótulo e texto de apoio são TEXTO: precisam de 4.5:1, não de 3:1.
+        // Por isso onSurfaceVariant, e não o cinza claro de ícone.
+        labelStyle: TextStyle(color: scheme.onSurfaceVariant),
+        helperStyle: TextStyle(color: scheme.onSurfaceVariant),
+        prefixIconColor: scheme.onSurfaceVariant,
+        suffixIconColor: scheme.onSurfaceVariant,
+      ),
+
+      checkboxTheme: CheckboxThemeData(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.xs),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: primaryBlue, width: 2),
+      ),
+
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.sm),
         ),
+      ),
+
+      dividerTheme: DividerThemeData(
+        color: scheme.outlineVariant,
+        space: 1,
+        thickness: 1,
+      ),
+
+      listTileTheme: const ListTileThemeData(
+        minVerticalPadding: AppSpacing.sm,
       ),
     );
   }
 
-  // Tema Escuro (Dark Mode)
-  static ThemeData get darkTheme {
-    return ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.dark,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryBlue,
-        primary: primaryBlue,
-        secondary: secondaryGreen,
-        surface: const Color(0xFF${palette.surfaceDark.replace('#', '')}),
-        brightness: Brightness.dark,
+  /// Indicador de base do campo filled. Só os cantos de cima são arredondados —
+  /// a base é reta porque é onde vive o indicador.
+  static UnderlineInputBorder _inputBorder(Color color, {double width = 1}) {
+    return UnderlineInputBorder(
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(AppRadius.sm),
+        topRight: Radius.circular(AppRadius.sm),
       ),
-      scaffoldBackgroundColor: const Color(0xFF${palette.backgroundDark.replace('#', '')}),
-      appBarTheme: const AppBarTheme(
-        centerTitle: true,
-        elevation: 0,
-        scrolledUnderElevation: 2,
-        backgroundColor: Color(0xFF${palette.surfaceDark.replace('#', '')}),
-        titleTextStyle: TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      cardTheme: CardTheme(
-        elevation: 2,
-        color: const Color(0xFF${palette.surfaceDark.replace('#', '')}),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryBlue,
-          foregroundColor: Colors.white,
-          minimumSize: const Size.fromHeight(52),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: const Color(0xFF1E293B),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF334155)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF334155)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: primaryBlue, width: 2),
-        ),
-      ),
+      borderSide: BorderSide(color: color, width: width),
     );
   }
 }
@@ -198,9 +337,10 @@ class AppTheme {
 export function generateMainDartCode(
   config: ScreenConfig,
   themeMode: ThemeMode,
-  palette: PaletteOption
+  _palette: PaletteOption
 ): string {
   return `import 'package:flutter/material.dart';
+import 'theme/app_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -227,8 +367,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: '${config.appBarTitle}',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
       themeMode: _themeMode,
       home: HomeScreen(onToggleTheme: toggleTheme),
     );
@@ -236,77 +376,9 @@ class _MyAppState extends State<MyApp> {
 }
 
 // ==========================================
-// TEMA MATERIAL 3 (Azul, Verde, Cinza)
-// ==========================================
-class AppTheme {
-  static const Color primaryBlue = Color(0xFF${palette.primary.replace('#', '')});
-  static const Color secondaryGreen = Color(0xFF${palette.secondary.replace('#', '')});
-  static const Color neutralGray = Color(0xFF${palette.neutralGray.replace('#', '')});
-
-  static ThemeData get lightTheme {
-    return ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.light,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryBlue,
-        primary: primaryBlue,
-        secondary: secondaryGreen,
-        brightness: Brightness.light,
-      ),
-      scaffoldBackgroundColor: const Color(0xFF${palette.backgroundLight.replace('#', '')}),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: Colors.grey.shade100,
-        border: const UnderlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-        ),
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-        ),
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: primaryBlue, width: 2),
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-        ),
-      ),
-    );
-  }
-
-  static ThemeData get darkTheme {
-    return ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.dark,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryBlue,
-        primary: primaryBlue,
-        secondary: secondaryGreen,
-        brightness: Brightness.dark,
-      ),
-      scaffoldBackgroundColor: const Color(0xFF${palette.backgroundDark.replace('#', '')}),
-      inputDecorationTheme: const InputDecorationTheme(
-        filled: true,
-        fillColor: Color(0xFF1E293B),
-        border: UnderlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: primaryBlue, width: 2),
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-        ),
-      ),
-    );
-  }
-}
-
-// ==========================================
 // TELA ATIVA: ${config.title.toUpperCase()}
 // ==========================================
+
 class HomeScreen extends StatefulWidget {
   final VoidCallback onToggleTheme;
 
@@ -344,10 +416,10 @@ class _HomeScreenState extends State<HomeScreen> {
               accountEmail: const Text('usuario@exemplo.com'),
               currentAccountPicture: const CircleAvatar(
                 backgroundColor: Colors.white,
-                child: Icon(Icons.person, color: AppTheme.primaryBlue, size: 36),
+                child: Icon(Icons.person, color: Theme.of(context).colorScheme.primary, size: 36),
               ),
               decoration: const BoxDecoration(
-                color: AppTheme.primaryBlue,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             ListTile(
@@ -385,7 +457,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SnackBar(content: Text('Ação primária executada!')),
           );
         },
-        backgroundColor: AppTheme.secondaryGreen,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('Novo Item', style: TextStyle(color: Colors.white)),
       ),` : ''}
@@ -399,17 +471,17 @@ class _HomeScreenState extends State<HomeScreen> {
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home, color: AppTheme.primaryBlue),
+            selectedIcon: Icon(Icons.home, color: Theme.of(context).colorScheme.primary),
             label: 'Início',
           ),
           NavigationDestination(
             icon: Icon(Icons.bar_chart_outlined),
-            selectedIcon: Icon(Icons.bar_chart, color: AppTheme.primaryBlue),
+            selectedIcon: Icon(Icons.bar_chart, color: Theme.of(context).colorScheme.primary),
             label: 'Métricas',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person, color: AppTheme.primaryBlue),
+            selectedIcon: Icon(Icons.person, color: Theme.of(context).colorScheme.primary),
             label: 'Perfil',
           ),
         ],
@@ -437,14 +509,14 @@ function getScreenContentBody(screenId: string): string {
                     const Icon(
                       Icons.architecture,
                       size: 64,
-                      color: AppTheme.neutralGray,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(height: 16),
                     Text(
                       'Protótipo Vazio',
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.neutralGray,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                     ),
                     const SizedBox(height: 8),
