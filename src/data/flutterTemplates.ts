@@ -417,6 +417,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+\${getExtraWidgets(config.id)}
 `;
 }
 
@@ -424,122 +425,8 @@ function getScreenContentBody(screenId: string): string {
   switch (screenId) {
     case 'cadastro':
       return `
-              // Abas limpas
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: const BoxDecoration(
-                        border: Border(bottom: BorderSide(color: AppTheme.primaryBlue, width: 2)),
-                      ),
-                      child: const Text(
-                        'Primeiro Cadastro',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.w600, fontSize: 14),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                        border: Border(bottom: BorderSide(color: Colors.grey.shade300, width: 1)),
-                      ),
-                      child: const Text(
-                        'Acesso via Convite',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 14),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'Criar conta de atleta',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 24),
-              
-              const TextField(
-                decoration: InputDecoration(
-                  labelText: 'Nome Completo *',
-                  prefixIcon: Icon(Icons.person_outline),
-                ),
-              ),
-              const SizedBox(height: 16),
-              
-              const TextField(
-                decoration: InputDecoration(
-                  labelText: 'ID de usuário *',
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Text('@', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 16)),
-                  ),
-                  hintText: 'gustavo.silva',
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              const TextField(
-                decoration: InputDecoration(
-                  labelText: 'E-mail de Acesso *',
-                  prefixIcon: Icon(Icons.email_outlined),
-                ),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 16),
-              
-              Row(
-                children: [
-                  Expanded(
-                    child: const TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Nascimento *',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: const TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: 'Senha (min 8) *',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: Checkbox(value: true, onChanged: (v) {}),
-                  ),
-                  const SizedBox(width: 8),
-                  const Expanded(
-                    child: Text(
-                      'Li e concordo com os Termos de Uso e Política de Privacidade.',
-                      style: TextStyle(fontSize: 13),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                ),
-                child: const Text('Concluir cadastro'),
-              ),
+              // E1-01 Cadastro Autônomo
+              const _CadastroView(),
 `;
     default:
       return `
@@ -570,6 +457,294 @@ function getScreenContentBody(screenId: string): string {
               )
 `;
   }
+}
+
+function getExtraWidgets(screenId: string): string {
+  if (screenId === 'cadastro') {
+    return `
+// ==========================================
+// WIDGETS PRIVADOS
+// ==========================================
+
+enum CadastroState { preenchendo, enviando, erroValidacao, menorDeIdade, emailExistente, erroRede, sucesso }
+
+class _CadastroView extends StatefulWidget {
+  const _CadastroView();
+
+  @override
+  State<_CadastroView> createState() => _CadastroViewState();
+}
+
+class _CadastroViewState extends State<_CadastroView> {
+  CadastroState _currentState = CadastroState.preenchendo;
+  bool _termosAceitos = false;
+  
+  final _nomeController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _senhaController = TextEditingController();
+  final _dataNascController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nomeController.dispose();
+    _emailController.dispose();
+    _senhaController.dispose();
+    _dataNascController.dispose();
+    super.dispose();
+  }
+
+  void _tentarCadastrar() {
+    setState(() => _currentState = CadastroState.enviando);
+    
+    // Simulação de regras (RN-02, RN-06, Erro genérico)
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+      
+      final email = _emailController.text.trim().toLowerCase();
+      final data = _dataNascController.text;
+
+      if (data == '2010-01-01' || data.contains('2010')) {
+        setState(() => _currentState = CadastroState.menorDeIdade);
+      } else if (email.contains('existente')) {
+        setState(() => _currentState = CadastroState.emailExistente);
+      } else if (email.contains('erro')) {
+        setState(() => _currentState = CadastroState.erroRede);
+      } else {
+        setState(() => _currentState = CadastroState.sucesso);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_currentState == CadastroState.sucesso) {
+      return _buildSucesso();
+    }
+
+    final bloqueado = _currentState == CadastroState.enviando || _currentState == CadastroState.sucesso;
+
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 480),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Criar conta de atleta',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+            ),
+            const SizedBox(height: 32),
+            
+            TextField(
+              controller: _nomeController,
+              enabled: !bloqueado,
+              decoration: const InputDecoration(
+                labelText: 'Nome Completo *',
+                hintText: 'Ex: Gustavo Silva',
+                prefixIcon: Icon(Icons.person_outline),
+              ),
+            ),
+            const SizedBox(height: 16),
+            
+            TextField(
+              controller: _emailController,
+              enabled: !bloqueado,
+              decoration: InputDecoration(
+                labelText: 'E-mail de Acesso *',
+                hintText: 'gustavo.silva@exemplo.com',
+                prefixIcon: const Icon(Icons.email_outlined),
+                errorText: _currentState == CadastroState.emailExistente 
+                  ? 'Este e-mail já está em uso na plataforma. Faça login ou recupere a senha.' 
+                  : null,
+              ),
+              keyboardType: TextInputType.emailAddress,
+            ),
+            const SizedBox(height: 16),
+            
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _dataNascController,
+                    enabled: !bloqueado,
+                    decoration: InputDecoration(
+                      labelText: 'Nascimento *',
+                      hintText: 'AAAA-MM-DD',
+                      errorText: _currentState == CadastroState.menorDeIdade
+                        ? 'O cadastro autônomo é restrito a maiores de 18 anos.'
+                        : null,
+                      errorMaxLines: 2,
+                    ),
+                    keyboardType: TextInputType.datetime,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: TextField(
+                    controller: _senhaController,
+                    enabled: !bloqueado,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Senha (mín 8) *',
+                      hintText: '••••••••',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 48,
+                  width: 48,
+                  child: Checkbox(
+                    value: _termosAceitos,
+                    onChanged: bloqueado ? null : (v) => setState(() => _termosAceitos = v ?? false),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 14),
+                    child: Text(
+                      'Li e concordo com os Termos de Uso e Política de Privacidade.',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
+
+            if (_currentState == CadastroState.erroRede) ...[
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.errorContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.error_outline, color: Theme.of(context).colorScheme.onErrorContainer),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Não foi possível conectar. Verifique sua internet e tente de novo.',
+                        style: TextStyle(color: Theme.of(context).colorScheme.onErrorContainer),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+
+            FilledButton(
+              onPressed: (_termosAceitos && !bloqueado) ? _tentarCadastrar : null,
+              style: FilledButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              child: _currentState == CadastroState.enviando
+                  ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                    )
+                  : const Text('Criar conta'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSucesso() {
+    final nomeDigitado = _nomeController.text.trim();
+    final slug = nomeDigitado.isEmpty ? 'atleta' : nomeDigitado.toLowerCase().replaceAll(' ', '.');
+    final handleGerado = '@$slug.123';
+
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 480),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.check_circle_outline,
+              size: 64,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Conta criada com sucesso!',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'O seu identificador único gerado pelo sistema é:',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                handleGerado,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Enviamos um e-mail de verificação para \${_emailController.text}. '
+              'Você já pode acessar a plataforma.',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            FilledButton(
+              onPressed: () {
+                // Aqui navegaria para Home/Dashboard real
+              },
+              style: FilledButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              child: const Text('Entrar na Plataforma'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+`;
+  }
+  return '';
 }
 
 export function generatePubspecYaml(config: ScreenConfig): string {
