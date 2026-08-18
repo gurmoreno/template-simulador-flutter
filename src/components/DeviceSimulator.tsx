@@ -113,7 +113,9 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
   const textColor = isDark ? 'text-slate-100' : 'text-slate-900';
   const subtextColor = isDark ? 'text-slate-400' : 'text-slate-500';
   const borderColor = isDark ? 'border-slate-800' : 'border-slate-200';
-  const inputBg = isDark ? 'bg-slate-800/80 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900';
+  const inputBg = isDark 
+    ? 'bg-slate-800 hover:bg-slate-700 text-slate-100 border-b border-transparent focus:border-blue-400 focus:bg-slate-800' 
+    : 'bg-slate-50 hover:bg-slate-100 text-slate-900 border-b border-transparent focus:border-blue-500 focus:bg-white';
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -279,17 +281,17 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
 
         {/* Screen Content according to active screenConfig.id */}
         <div className="flex-1 p-4 flex flex-col gap-4">
-          {screenConfig.id === 'login' && (
-            <div className="flex-1 flex flex-col py-2 px-1 gap-3">
-              {/* Selector Tabs: [Cadastro Autônomo] vs [Ativação de Convite] */}
-              <div className="flex bg-slate-200 dark:bg-slate-800 p-1 rounded-xl text-xs font-semibold">
+          {screenConfig.id === 'cadastro' && (
+            <div className="flex-1 flex flex-col py-2 px-1 gap-4">
+              {/* Clean underline tabs */}
+              <div className="flex border-b border-slate-200 dark:border-slate-800 text-xs font-medium">
                 <button
                   type="button"
                   onClick={() => setE1Mode('register')}
-                  className={`flex-1 py-1.5 rounded-lg transition-all ${
+                  className={`flex-1 py-2.5 text-center transition-colors border-b-2 ${
                     e1Mode === 'register'
-                      ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs'
-                      : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+                      ? 'border-blue-600 text-blue-600 dark:border-blue-500 dark:text-blue-400'
+                      : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
                   }`}
                 >
                   Primeiro Cadastro
@@ -297,10 +299,10 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                 <button
                   type="button"
                   onClick={() => setE1Mode('login')}
-                  className={`flex-1 py-1.5 rounded-lg transition-all ${
+                  className={`flex-1 py-2.5 text-center transition-colors border-b-2 ${
                     e1Mode === 'login'
-                      ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs'
-                      : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+                      ? 'border-blue-600 text-blue-600 dark:border-blue-500 dark:text-blue-400'
+                      : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
                   }`}
                 >
                   Acesso via Convite
@@ -308,88 +310,82 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
               </div>
 
               {e1Mode === 'register' ? (
-                <form onSubmit={handleRegisterSubmit} className="flex flex-col gap-2.5">
-                  <div className="text-center mb-1">
-                    <h3 className={`text-base font-bold ${textColor}`}>Criar Conta de Atleta/Aluno</h3>
-                    <p className={`text-[11px] ${subtextColor}`}>Seu ID público e histórico pertencem a você</p>
+                <form onSubmit={handleRegisterSubmit} className="flex flex-col gap-3.5">
+                  <div className="mb-1">
+                    <h3 className={`text-[17px] font-semibold ${textColor}`}>Criar conta de atleta</h3>
                   </div>
 
                   {/* Nome Completo */}
                   <div>
-                    <label className={`block text-[10px] font-bold uppercase mb-0.5 ${subtextColor}`}>
+                    <label className={`block text-[11px] font-medium mb-1 ${subtextColor}`}>
                       Nome Completo <span className="text-rose-500">*</span>
                     </label>
                     <div className="relative">
-                      <User className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+                      <User className="w-4 h-4 absolute left-2.5 top-2.5 text-slate-400" />
                       <input
                         type="text"
                         value={fullName}
                         onChange={(e) => handleNameChange(e.target.value)}
                         placeholder="Ex: Gustavo Silva"
                         required
-                        className={`w-full text-xs pl-8 pr-2.5 py-2 rounded-lg border outline-none transition ${inputBg}`}
+                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`}
                       />
                     </div>
                   </div>
 
                   {/* Handle Único @id_publico */}
                   <div>
-                    <div className="flex items-center justify-between mb-0.5">
-                      <label className={`block text-[10px] font-bold uppercase ${subtextColor}`}>
-                        ID <span className="text-rose-500">*</span>
-                      </label>
-                    </div>
+                    <label className={`block text-[11px] font-medium mb-1 ${subtextColor}`}>
+                      ID de usuário <span className="text-rose-500">*</span>
+                    </label>
                     <div className="relative">
-                      <span className="absolute left-2.5 top-2 text-xs font-bold text-blue-600 dark:text-blue-400">@</span>
+                      <span className="absolute left-3 top-2 text-sm font-medium text-slate-400">@</span>
                       <input
                         type="text"
                         value={handle.replace(/^@/, '')}
                         onChange={(e) => setHandle(`@${e.target.value.toLowerCase().replace(/[^a-z0-9.]/g, '')}`)}
                         placeholder="gustavo.silva"
                         required
-                        className={`w-full text-xs pl-7 pr-24 py-2 rounded-lg border outline-none font-mono ${!isHandleAvailable ? 'border-rose-400 focus:border-rose-500 dark:border-rose-500' : 'focus:border-blue-500'} ${inputBg}`}
+                        className={`w-full text-sm pl-8 pr-24 py-2 rounded outline-none transition font-mono ${inputBg} ${!isHandleAvailable ? '!border-rose-400 focus:!border-rose-500' : ''}`}
                       />
                       {isHandleAvailable ? (
-                        <span className="absolute right-2 top-2 text-[10px] font-bold text-emerald-600 dark:text-emerald-500">
-                          Disponível ✅
+                        <span className="absolute right-2.5 top-2.5 text-[11px] font-medium text-emerald-600 dark:text-emerald-500">
+                          Disponível
                         </span>
                       ) : (
-                        <span className="absolute right-2 top-2 text-[10px] font-bold text-rose-600 dark:text-rose-500">
-                          Indisponível ❌
+                        <span className="absolute right-2.5 top-2.5 text-[11px] font-medium text-rose-600 dark:text-rose-500">
+                          Indisponível
                         </span>
                       )}
                     </div>
-                    <p className="text-[9px] text-slate-400 mt-0.5">
-                      ID único do usuário no sistema. (Digite "existente" para ver o erro)
-                    </p>
                   </div>
 
                   {/* E-mail de Acesso */}
                   <div>
-                    <label className={`block text-[10px] font-bold uppercase mb-0.5 ${subtextColor}`}>
+                    <label className={`block text-[11px] font-medium mb-1 ${subtextColor}`}>
                       E-mail de Acesso <span className="text-rose-500">*</span>
                     </label>
                     <div className="relative">
-                      <Mail className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+                      <Mail className="w-4 h-4 absolute left-2.5 top-2.5 text-slate-400" />
                       <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="gustavo.silva@exemplo.com"
                         required
-                        className={`w-full text-xs pl-8 pr-2.5 py-2 rounded-lg border outline-none transition ${inputBg}`}
+                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`}
                       />
                     </div>
                   </div>
 
                   {/* Grid: Data de Nascimento + Senha */}
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <div className="flex items-center justify-between mb-0.5">
-                        <label className={`block text-[10px] font-bold uppercase ${subtextColor}`}>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className={`block text-[11px] font-medium ${subtextColor}`}>
                           Nascimento <span className="text-rose-500">*</span>
                         </label>
-                        <span className={`text-[9px] font-bold ${isUnderage ? 'text-rose-500' : 'text-slate-400'}`}>
+                        <span className={`text-[10px] font-medium ${isUnderage ? 'text-rose-500' : 'text-slate-400'}`}>
                           {userAge} anos
                         </span>
                       </div>
@@ -398,12 +394,12 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                         value={birthDate}
                         onChange={(e) => setBirthDate(e.target.value)}
                         required
-                        className={`w-full text-xs px-2 py-1.5 rounded-lg border outline-none ${inputBg}`}
+                        className={`w-full text-sm px-2.5 py-2 rounded outline-none transition ${inputBg}`}
                       />
                     </div>
 
                     <div>
-                      <label className={`block text-[10px] font-bold uppercase mb-0.5 ${subtextColor}`}>
+                      <label className={`block text-[11px] font-medium mb-1 ${subtextColor}`}>
                         Senha (min 8) <span className="text-rose-500">*</span>
                       </label>
                       <input
@@ -412,29 +408,29 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
                         required
-                        className={`w-full text-xs px-2 py-1.5 rounded-lg border outline-none ${inputBg}`}
+                        className={`w-full text-sm px-2.5 py-2 rounded outline-none transition ${inputBg}`}
                       />
                     </div>
                   </div>
 
                   {/* RN-02 Age Alert */}
                   {isUnderage && (
-                    <div className="p-2 rounded-lg bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-[10px] text-rose-700 dark:text-rose-300">
-                      🛑 <strong>Aviso:</strong> O cadastro autônomo é restrito a maiores de 18 anos.
+                    <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border-l-2 border-rose-500 text-[11px] text-rose-700 dark:text-rose-300">
+                      O cadastro autônomo é restrito a maiores de 18 anos.
                     </div>
                   )}
 
                   {/* Terms Checkbox */}
-                  <div className="flex items-start gap-1.5 mt-0.5">
+                  <div className="flex items-start gap-2 mt-1">
                     <input
                       type="checkbox"
                       id="terms"
                       checked={termsAccepted}
                       onChange={(e) => setTermsAccepted(e.target.checked)}
-                      className="mt-0.5 rounded text-blue-600 focus:ring-0"
+                      className="mt-0.5 rounded-sm text-blue-600 focus:ring-0"
                     />
-                    <label htmlFor="terms" className={`text-[10px] leading-tight cursor-pointer ${textColor}`}>
-                      Li e concordo com os <strong>Termos de Uso</strong> e <strong>Política de Privacidade</strong>.
+                    <label htmlFor="terms" className={`text-[11px] leading-snug cursor-pointer ${textColor}`}>
+                      Li e concordo com os Termos de Uso e Política de Privacidade.
                     </label>
                   </div>
 
@@ -442,90 +438,90 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                   <button
                     type="submit"
                     disabled={!termsAccepted || isUnderage || !isHandleAvailable}
-                    className={`w-full py-2.5 rounded-xl text-white text-xs font-bold shadow-md transition-all active:scale-[0.98] mt-1 ${
-                      !termsAccepted || isUnderage || !isHandleAvailable ? 'opacity-50 cursor-not-allowed' : ''
+                    className={`w-full py-2.5 rounded text-white text-[13px] font-medium transition-opacity mt-2 ${
+                      !termsAccepted || isUnderage || !isHandleAvailable ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'
                     }`}
                     style={{ backgroundColor: palette.primary }}
                   >
-                    CONCLUIR CADASTRO
+                    Concluir cadastro
                   </button>
 
                   {/* Registration Status Feedback */}
                   {registrationStatus === 'success' && (
-                    <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200 text-[10px] text-emerald-800 dark:text-emerald-200 flex flex-col gap-1 animate-fadeIn">
-                      <div className="font-bold flex items-center gap-1">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Conta Criada com Sucesso!
+                    <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border-l-2 border-emerald-500 text-[11px] text-emerald-800 dark:text-emerald-200 flex flex-col gap-1 animate-fadeIn mt-2">
+                      <div className="font-medium flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Conta criada com sucesso
                       </div>
-                      <p>
-                        Handle <strong className="font-mono">{handle}</strong> reservado. Enviamos um e-mail de verificação para <strong>{email}</strong>.
+                      <p className="opacity-90">
+                        Handle <strong className="font-mono">{handle}</strong> reservado. Instruções enviadas para {email}.
                       </p>
                     </div>
                   )}
 
                   {registrationStatus === 'email_exists' && (
-                    <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/70 border border-amber-200 text-[10px] text-amber-800 dark:text-amber-200 flex flex-col gap-1">
-                      <div className="font-bold">⚠️ E-mail já cadastrado</div>
-                      <p>
-                        Se você já possui conta, enviamos instruções de acesso para seu e-mail para preservar a segurança do seu histórico esportivo.
+                    <div className="p-3 bg-amber-50 dark:bg-amber-950/40 border-l-2 border-amber-500 text-[11px] text-amber-800 dark:text-amber-200 flex flex-col gap-1 mt-2">
+                      <div className="font-medium">E-mail já possui cadastro</div>
+                      <p className="opacity-90">
+                        Enviamos instruções de acesso para seu e-mail, preservando seu histórico esportivo existente.
                       </p>
                     </div>
                   )}
                 </form>
               ) : (
-                <div className="flex flex-col gap-3 py-2">
-                  <div className="text-center mb-2">
-                    <h3 className={`text-base font-bold ${textColor}`}>Ativação de Convite & Login</h3>
-                    <p className={`text-[11px] ${subtextColor}`}>Acesse sua conta ou ative o convite enviado pela sua assessoria</p>
+                <div className="flex flex-col gap-4 py-2">
+                  <div className="mb-2">
+                    <h3 className={`text-[17px] font-semibold ${textColor}`}>Acesso & Ativação</h3>
+                    <p className={`text-[12px] ${subtextColor}`}>Acesse sua conta ou ative o convite da assessoria</p>
                   </div>
 
                   <div>
-                    <label className={`block text-[10px] font-bold uppercase mb-0.5 ${subtextColor}`}>E-mail de Acesso</label>
+                    <label className={`block text-[11px] font-medium mb-1 ${subtextColor}`}>E-mail</label>
                     <div className="relative">
-                      <Mail className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+                      <Mail className="w-4 h-4 absolute left-2.5 top-2.5 text-slate-400" />
                       <input
                         type="email"
                         placeholder="atleta@exemplo.com"
-                        className={`w-full text-xs pl-8 pr-2.5 py-2 rounded-lg border outline-none transition ${inputBg}`}
+                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className={`block text-[10px] font-bold uppercase mb-0.5 ${subtextColor}`}>Senha</label>
+                    <label className={`block text-[11px] font-medium mb-1 ${subtextColor}`}>Senha</label>
                     <div className="relative">
-                      <Lock className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+                      <Lock className="w-4 h-4 absolute left-2.5 top-2.5 text-slate-400" />
                       <input
                         type="password"
                         placeholder="••••••••"
-                        className={`w-full text-xs pl-8 pr-2.5 py-2 rounded-lg border outline-none transition ${inputBg}`}
+                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`}
                       />
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between text-[10px]">
-                    <label className={`flex items-center gap-1 cursor-pointer ${textColor}`}>
+                  <div className="flex items-center justify-between text-[11px] mt-1">
+                    <label className={`flex items-center gap-1.5 cursor-pointer ${textColor}`}>
                       <input
                         type="checkbox"
                         checked={rememberMe}
                         onChange={(e) => setRememberMe(e.target.checked)}
-                        className="rounded text-blue-600 focus:ring-0"
+                        className="rounded-sm text-blue-600 focus:ring-0"
                       />
-                      Lembrar acesso
+                      Lembrar meu acesso
                     </label>
-                    <span className="font-semibold text-blue-600 dark:text-blue-400 cursor-pointer">
+                    <span className="font-medium text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">
                       Esqueceu a senha?
                     </span>
                   </div>
 
                   <button
-                    className="w-full py-2.5 rounded-xl text-white text-xs font-bold shadow-md transition-all active:scale-[0.98] mt-2"
+                    className="w-full py-2.5 rounded text-white text-[13px] font-medium transition-opacity hover:opacity-90 mt-3"
                     style={{ backgroundColor: palette.primary }}
                   >
-                    ENTRAR / ATIVAR CONVITE DA ASSESSORIA
+                    Entrar
                   </button>
 
-                  <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-[10px] text-slate-600 dark:text-slate-300">
-                    ℹ️ <strong>Convites:</strong> Se sua assessoria te cadastrou, acesse o link enviado no e-mail para definir senha e vincular seu ID.
+                  <div className="p-3 bg-slate-50 dark:bg-slate-900 border-l-2 border-slate-300 dark:border-slate-700 text-[11px] text-slate-600 dark:text-slate-400 mt-2">
+                    <span className="font-medium">Ativação por convite:</span> Se você foi cadastrado pela assessoria, use o e-mail recebido para definir sua senha e acessar.
                   </div>
                 </div>
               )}

@@ -4,8 +4,13 @@ export const COLOR_PALETTES: PaletteOption[] = [
   {
     id: 'luna',
     name: 'Luna Ocean (Ciano & Azul)',
-    primary: '#54ACBF', // Ciano Azulado
-    secondary: '#26658C', // Azul Profundo
+    // primary/secondary definidos por contraste medido, não por gosto:
+    // #26658C com texto branco = 6.32:1 (aprova WCAG AA)
+    // #54ACBF com texto branco = 2.62:1 (reprova) — serve como destaque, e como
+    // primary APENAS no tema escuro, onde contrasta 6.47:1 com o azul-noite.
+    // Não inverter de volta.
+    primary: '#26658C',   // Azul Médio — ação primária no tema claro
+    secondary: '#54ACBF', // Ciano — destaque
     accentGreen: '#A7EBF2', // Ciano Suave
     neutralGray: '#023859', // Azul Escuro Slate
     surfaceLight: '#FFFFFF',
@@ -249,6 +254,22 @@ class AppTheme {
         brightness: Brightness.light,
       ),
       scaffoldBackgroundColor: const Color(0xFF${palette.backgroundLight.replace('#', '')}),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: Colors.grey.shade100,
+        border: const UnderlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+        ),
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+        ),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: primaryBlue, width: 2),
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+        ),
+      ),
     );
   }
 
@@ -263,6 +284,22 @@ class AppTheme {
         brightness: Brightness.dark,
       ),
       scaffoldBackgroundColor: const Color(0xFF${palette.backgroundDark.replace('#', '')}),
+      inputDecorationTheme: const InputDecorationTheme(
+        filled: true,
+        fillColor: Color(0xFF1E293B),
+        border: UnderlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: primaryBlue, width: 2),
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+        ),
+      ),
     );
   }
 }
@@ -384,7 +421,128 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 function getScreenContentBody(screenId: string): string {
-  return `
+  switch (screenId) {
+    case 'cadastro':
+      return `
+              // Abas limpas
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: const BoxDecoration(
+                        border: Border(bottom: BorderSide(color: AppTheme.primaryBlue, width: 2)),
+                      ),
+                      child: const Text(
+                        'Primeiro Cadastro',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.w600, fontSize: 14),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        border: Border(bottom: BorderSide(color: Colors.grey.shade300, width: 1)),
+                      ),
+                      child: const Text(
+                        'Acesso via Convite',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 14),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Criar conta de atleta',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 24),
+              
+              const TextField(
+                decoration: InputDecoration(
+                  labelText: 'Nome Completo *',
+                  prefixIcon: Icon(Icons.person_outline),
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              const TextField(
+                decoration: InputDecoration(
+                  labelText: 'ID de usuário *',
+                  prefixIcon: Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: Text('@', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 16)),
+                  ),
+                  hintText: 'gustavo.silva',
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              const TextField(
+                decoration: InputDecoration(
+                  labelText: 'E-mail de Acesso *',
+                  prefixIcon: Icon(Icons.email_outlined),
+                ),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 16),
+              
+              Row(
+                children: [
+                  Expanded(
+                    child: const TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Nascimento *',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: const TextField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Senha (min 8) *',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: Checkbox(value: true, onChanged: (v) {}),
+                  ),
+                  const SizedBox(width: 8),
+                  const Expanded(
+                    child: Text(
+                      'Li e concordo com os Termos de Uso e Política de Privacidade.',
+                      style: TextStyle(fontSize: 13),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                child: const Text('Concluir cadastro'),
+              ),
+`;
+    default:
+      return `
               Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -411,6 +569,7 @@ function getScreenContentBody(screenId: string): string {
                 ),
               )
 `;
+  }
 }
 
 export function generatePubspecYaml(config: ScreenConfig): string {

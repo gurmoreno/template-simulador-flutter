@@ -25,6 +25,17 @@ import {
 
 const INITIAL_SCREENS: ScreenConfig[] = [
   {
+    id: 'cadastro',
+    title: 'Primeiro Cadastro',
+    subtitle: 'Cadastro Autônomo do Atleta',
+    iconName: 'UserPlus',
+    showAppBar: true,
+    showBottomNav: false,
+    showFAB: false,
+    showDrawer: false,
+    appBarTitle: 'Acesso & Convites',
+  },
+  {
     id: 'custom',
     title: 'Nova Tela',
     subtitle: 'Protótipo Vazio',
@@ -42,7 +53,7 @@ export default function App() {
   const [themeMode, setThemeMode] = useState<ThemeMode>('light');
   const [activePalette, setActivePalette] = useState<PaletteOption>(COLOR_PALETTES[0]);
   const [activeView, setActiveView] = useState<'prototype' | 'code'>('prototype');
-  const [activeScreenId, setActiveScreenId] = useState<ScreenType>('custom');
+  const [activeScreenId, setActiveScreenId] = useState<ScreenType>('cadastro');
   const [screens, setScreens] = useState<ScreenConfig[]>(INITIAL_SCREENS);
 
   const [isAiPromptOpen, setIsAiPromptOpen] = useState(false);
