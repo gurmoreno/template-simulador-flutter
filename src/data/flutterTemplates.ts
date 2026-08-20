@@ -489,7 +489,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-\${getExtraWidgets(config.id)}
+${getExtraWidgets(config.id)}
 `;
 }
 
