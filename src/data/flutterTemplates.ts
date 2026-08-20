@@ -743,7 +743,8 @@ class _CadastroViewState extends State<_CadastroView> {
   Widget _buildSucesso() {
     final nomeDigitado = _nomeController.text.trim();
     final slug = nomeDigitado.isEmpty ? 'atleta' : nomeDigitado.toLowerCase().replaceAll(' ', '.');
-    final handleGerado = '@$slug.123';
+    final sufixo = (nomeDigitado.toLowerCase() == 'gustavo silva') ? '2' : '';
+    final handleGerado = '@$slug$sufixo';
 
     return Center(
       child: ConstrainedBox(
