@@ -107,6 +107,12 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
 
   const isDark = themeMode === 'dark';
 
+  // Extract correct primary and outline colors based on theme
+  const primary = themeMode === 'dark' ? palette.primaryDark : palette.primary;
+  const outline = themeMode === 'dark' ? palette.outlineDark : palette.outlineLight;
+  const secondary = palette.secondary;
+  const accent = palette.accentGreen;
+
   // Surface colors according to palette and light/dark theme
   const surfaceBg = isDark ? palette.surfaceDark : palette.surfaceLight;
   const bodyBg = isDark ? palette.backgroundDark : palette.backgroundLight;
@@ -114,8 +120,8 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
   const subtextColor = isDark ? 'text-slate-400' : 'text-slate-500';
   const borderColor = isDark ? 'border-slate-800' : 'border-slate-200';
   const inputBg = isDark 
-    ? 'bg-slate-800 hover:bg-slate-700 text-slate-100 border-b border-transparent focus:border-blue-400 focus:bg-slate-800' 
-    : 'bg-slate-50 hover:bg-slate-100 text-slate-900 border-b border-transparent focus:border-blue-500 focus:bg-white';
+    ? 'bg-slate-800 hover:bg-slate-700 text-slate-100 border-b border-transparent focus:border-[var(--theme-primary)] focus:bg-slate-800' 
+    : 'bg-slate-50 hover:bg-slate-100 text-slate-900 border-b border-transparent focus:border-[var(--theme-primary)] focus:bg-white';
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,7 +140,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[620px] p-4 bg-slate-100/70 dark:bg-slate-950/70 rounded-2xl border border-slate-200 dark:border-slate-800 relative overflow-hidden transition-colors">
+    <div className="flex flex-col items-center justify-center min-h-[620px] p-4 bg-slate-100/70 dark:bg-slate-950/70 rounded-2xl border border-slate-200 dark:border-slate-800 relative overflow-hidden transition-colors" style={{ '--theme-primary': primary, '--theme-outline': outline, '--theme-secondary': secondary, '--theme-accent': accent } as React.CSSProperties}>
       {/* Background Decorative Pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] opacity-[0.05] pointer-events-none" />
 
@@ -234,7 +240,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
             </div>
 
             <div className="flex items-center gap-2 text-slate-400 text-xs">
-              <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] font-mono text-emerald-400">
+              <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] font-mono" style={{ color: accent }}>
                 Flutter Web M3
               </span>
             </div>
@@ -255,8 +261,8 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
         {/* Material 3 App Bar */}
         {screenConfig.showAppBar && (
           <div
-            className={`px-4 py-3 border-b ${borderColor} flex items-center justify-between sticky top-0 z-10`}
-            style={{ backgroundColor: surfaceBg }}
+            className={`px-4 py-3 border-b  flex items-center justify-between sticky top-0 z-10`}
+            style={{ backgroundColor: surfaceBg, borderColor: outline }}
           >
             <div className="flex items-center gap-2">
               {screenConfig.showDrawer && (
@@ -284,15 +290,16 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
           {screenConfig.id === 'cadastro' && (
             <div className="flex-1 flex flex-col py-2 px-1 gap-4">
               {/* Clean underline tabs */}
-              <div className="flex border-b border-slate-200 dark:border-slate-800 text-xs font-medium">
+              <div className="flex border-b text-xs font-medium" style={{ borderColor: outline }}>
                 <button
                   type="button"
                   onClick={() => setE1Mode('register')}
                   className={`flex-1 py-2.5 text-center transition-colors border-b-2 ${
                     e1Mode === 'register'
-                      ? 'border-blue-600 text-blue-600 dark:border-blue-500 dark:text-blue-400'
+                      ? ''
                       : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
                   }`}
+                  style={e1Mode === 'register' ? { borderColor: primary, color: primary } : {}}
                 >
                   Primeiro Cadastro
                 </button>
@@ -301,9 +308,10 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                   onClick={() => setE1Mode('login')}
                   className={`flex-1 py-2.5 text-center transition-colors border-b-2 ${
                     e1Mode === 'login'
-                      ? 'border-blue-600 text-blue-600 dark:border-blue-500 dark:text-blue-400'
+                      ? ''
                       : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
                   }`}
+                  style={e1Mode === 'login' ? { borderColor: primary, color: primary } : {}}
                 >
                   Acesso via Convite
                 </button>
@@ -328,7 +336,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                         onChange={(e) => handleNameChange(e.target.value)}
                         placeholder="Ex: Gustavo Silva"
                         required
-                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`}
+                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline }}
                       />
                     </div>
                   </div>
@@ -346,10 +354,10 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                         onChange={(e) => setHandle(`@${e.target.value.toLowerCase().replace(/[^a-z0-9.]/g, '')}`)}
                         placeholder="gustavo.silva"
                         required
-                        className={`w-full text-sm pl-8 pr-24 py-2 rounded outline-none transition font-mono ${inputBg} ${!isHandleAvailable ? '!border-rose-400 focus:!border-rose-500' : ''}`}
+                        className={`w-full text-sm pl-8 pr-24 py-2 rounded outline-none transition font-mono ${inputBg} ${!isHandleAvailable ? '!border-rose-400 focus:!border-rose-500' : ''}`} style={{ borderColor: !isHandleAvailable ? undefined : outline }}
                       />
                       {isHandleAvailable ? (
-                        <span className="absolute right-2.5 top-2.5 text-[11px] font-medium text-emerald-600 dark:text-emerald-500">
+                        <span className="absolute right-2.5 top-2.5 text-[11px] font-medium" style={{ color: accent }}>
                           Disponível
                         </span>
                       ) : (
@@ -373,7 +381,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="gustavo.silva@exemplo.com"
                         required
-                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`}
+                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline }}
                       />
                     </div>
                   </div>
@@ -394,7 +402,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                         value={birthDate}
                         onChange={(e) => setBirthDate(e.target.value)}
                         required
-                        className={`w-full text-sm px-2.5 py-2 rounded outline-none transition ${inputBg}`}
+                        className={`w-full text-sm px-2.5 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline }}
                       />
                     </div>
 
@@ -408,7 +416,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
                         required
-                        className={`w-full text-sm px-2.5 py-2 rounded outline-none transition ${inputBg}`}
+                        className={`w-full text-sm px-2.5 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline }}
                       />
                     </div>
                   </div>
@@ -427,7 +435,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                       id="terms"
                       checked={termsAccepted}
                       onChange={(e) => setTermsAccepted(e.target.checked)}
-                      className="mt-0.5 rounded-sm text-blue-600 focus:ring-0"
+                      className="mt-0.5 rounded-sm focus:ring-0" style={{ color: primary, accentColor: primary }}
                     />
                     <label htmlFor="terms" className={`text-[11px] leading-snug cursor-pointer ${textColor}`}>
                       Li e concordo com os Termos de Uso e Política de Privacidade.
@@ -441,16 +449,16 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                     className={`w-full py-2.5 rounded text-white text-[13px] font-medium transition-opacity mt-2 ${
                       !termsAccepted || isUnderage || !isHandleAvailable ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'
                     }`}
-                    style={{ backgroundColor: palette.primary }}
+                    style={{ backgroundColor: primary }}
                   >
                     Concluir cadastro
                   </button>
 
                   {/* Registration Status Feedback */}
                   {registrationStatus === 'success' && (
-                    <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border-l-2 border-emerald-500 text-[11px] text-emerald-800 dark:text-emerald-200 flex flex-col gap-1 animate-fadeIn mt-2">
+                    <div className="p-3 border-l-2 text-[11px] flex flex-col gap-1 animate-fadeIn mt-2" style={{ backgroundColor: `${accent}15`, borderColor: accent, color: isDark ? '#E3ECF2' : '#011C40' }}>
                       <div className="font-medium flex items-center gap-1.5">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Conta criada com sucesso
+                        <CheckCircle2 className="w-4 h-4" style={{ color: accent }} /> Conta criada com sucesso
                       </div>
                       <p className="opacity-90">
                         Handle <strong className="font-mono">{handle}</strong> reservado. Instruções enviadas para {email}.
@@ -481,7 +489,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                       <input
                         type="email"
                         placeholder="atleta@exemplo.com"
-                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`}
+                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline }}
                       />
                     </div>
                   </div>
@@ -493,7 +501,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                       <input
                         type="password"
                         placeholder="••••••••"
-                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`}
+                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline }}
                       />
                     </div>
                   </div>
@@ -504,23 +512,23 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                         type="checkbox"
                         checked={rememberMe}
                         onChange={(e) => setRememberMe(e.target.checked)}
-                        className="rounded-sm text-blue-600 focus:ring-0"
+                        className="rounded-sm focus:ring-0" style={{ color: primary, accentColor: primary }}
                       />
                       Lembrar meu acesso
                     </label>
-                    <span className="font-medium text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">
+                    <span className="font-medium cursor-pointer hover:underline" style={{ color: primary }}>
                       Esqueceu a senha?
                     </span>
                   </div>
 
                   <button
                     className="w-full py-2.5 rounded text-white text-[13px] font-medium transition-opacity hover:opacity-90 mt-3"
-                    style={{ backgroundColor: palette.primary }}
+                    style={{ backgroundColor: primary }}
                   >
                     Entrar
                   </button>
 
-                  <div className="p-3 bg-slate-50 dark:bg-slate-900 border-l-2 border-slate-300 dark:border-slate-700 text-[11px] text-slate-600 dark:text-slate-400 mt-2">
+                  <div className="p-3 bg-slate-50 dark:bg-slate-900 border-l-2 text-[11px] text-slate-600 dark:text-slate-400 mt-2" style={{ borderColor: outline }}>
                     <span className="font-medium">Ativação por convite:</span> Se você foi cadastrado pela assessoria, use o e-mail recebido para definir sua senha e acessar.
                   </div>
                 </div>
@@ -538,7 +546,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                 </div>
                 <div
                   className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-xs"
-                  style={{ backgroundColor: palette.primary }}
+                  style={{ backgroundColor: primary }}
                 >
                   AP
                 </div>
@@ -547,7 +555,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
               {/* Score de Aderência Banner */}
               <div
                 className="rounded-2xl p-4 text-white shadow-md relative overflow-hidden"
-                style={{ backgroundColor: palette.primary }}
+                style={{ backgroundColor: primary }}
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-xs text-white/90 font-medium">Score de Aderência Global</span>
@@ -570,19 +578,19 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
               {/* Metrics Grid */}
               <div className="grid grid-cols-2 gap-2.5">
                 <div
-                  className={`p-3 rounded-xl border ${borderColor} flex flex-col gap-1 shadow-xs`}
-                  style={{ backgroundColor: surfaceBg }}
+                  className={`p-3 rounded-xl border  flex flex-col gap-1 shadow-xs`}
+                  style={{ backgroundColor: surfaceBg, borderColor: outline }}
                 >
-                  <User className="w-4 h-4 text-blue-500" />
+                  <User className="w-4 h-4" style={{ color: primary }} />
                   <span className={`text-[10px] font-medium ${subtextColor}`}>Atletas Ativos</span>
                   <span className={`text-xs font-bold ${textColor}`}>42 Atletas em 3 Grupos</span>
                 </div>
 
                 <div
-                  className={`p-3 rounded-xl border ${borderColor} flex flex-col gap-1 shadow-xs`}
-                  style={{ backgroundColor: surfaceBg }}
+                  className={`p-3 rounded-xl border  flex flex-col gap-1 shadow-xs`}
+                  style={{ backgroundColor: surfaceBg, borderColor: outline }}
                 >
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <CheckCircle2 className="w-4 h-4" style={{ color: accent }} />
                   <span className={`text-[10px] font-medium ${subtextColor}`}>Faturamento PIX</span>
                   <span className={`text-xs font-bold ${textColor}`}>R$ 18.500 / R$ 2.400 pend</span>
                 </div>
@@ -594,12 +602,12 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                   Treino Prescrito Destaque do Dia
                 </h4>
                 <div
-                  className={`p-3 rounded-xl border ${borderColor} flex flex-col gap-1.5 shadow-xs`}
-                  style={{ backgroundColor: surfaceBg }}
+                  className={`p-3 rounded-xl border  flex flex-col gap-1.5 shadow-xs`}
+                  style={{ backgroundColor: surfaceBg, borderColor: outline }}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-blue-600 dark:text-blue-400">Corrida — Intervalado 6x800m</span>
-                    <span className="text-[10px] font-semibold bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-md">
+                    <span className="text-xs font-bold" style={{ color: primary }}>Corrida — Intervalado 6x800m</span>
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md" style={{ backgroundColor: `${primary}15`, color: primary }}>
                       Pace Limiar (Z3)
                     </span>
                   </div>
@@ -621,7 +629,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Buscar por nome ou @handle público..."
-                  className={`w-full text-xs pl-9 pr-3 py-2 rounded-xl border outline-none ${inputBg}`}
+                  className={`w-full text-xs pl-9 pr-3 py-2 rounded-xl border outline-none ${inputBg}`} style={{ borderColor: outline }}
                 />
               </div>
 
@@ -629,25 +637,25 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
               <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px]">
                 <span
                   className="px-2.5 py-1 rounded-full font-bold text-white shadow-2xs shrink-0 cursor-pointer text-[10px]"
-                  style={{ backgroundColor: palette.primary }}
+                  style={{ backgroundColor: primary }}
                 >
                   Todos (42)
                 </span>
                 <span
-                  className={`px-2.5 py-1 rounded-full border ${borderColor} ${textColor} shrink-0 cursor-pointer text-[10px]`}
-                  style={{ backgroundColor: surfaceBg }}
+                  className={`px-2.5 py-1 rounded-full border  ${textColor} shrink-0 cursor-pointer text-[10px]`}
+                  style={{ backgroundColor: surfaceBg, borderColor: outline }}
                 >
                   Pelotão 5h
                 </span>
                 <span
-                  className={`px-2.5 py-1 rounded-full border ${borderColor} ${textColor} shrink-0 cursor-pointer text-[10px]`}
-                  style={{ backgroundColor: surfaceBg }}
+                  className={`px-2.5 py-1 rounded-full border  ${textColor} shrink-0 cursor-pointer text-[10px]`}
+                  style={{ backgroundColor: surfaceBg, borderColor: outline }}
                 >
                   Iniciantes 10k
                 </span>
                 <span
-                  className={`px-2.5 py-1 rounded-full border ${borderColor} ${textColor} shrink-0 cursor-pointer text-[10px]`}
-                  style={{ backgroundColor: surfaceBg }}
+                  className={`px-2.5 py-1 rounded-full border  ${textColor} shrink-0 cursor-pointer text-[10px]`}
+                  style={{ backgroundColor: surfaceBg, borderColor: outline }}
                 >
                   Triathlon Iron
                 </span>
@@ -656,19 +664,19 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
               {/* Athlete List Cards */}
               <div className="flex flex-col gap-2">
                 <div
-                  className={`p-3 rounded-2xl border ${borderColor} flex items-center gap-3 shadow-xs`}
-                  style={{ backgroundColor: surfaceBg }}
+                  className={`p-3 rounded-2xl border  flex items-center gap-3 shadow-xs`}
+                  style={{ backgroundColor: surfaceBg, borderColor: outline }}
                 >
                   <div
                     className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs text-white shrink-0"
-                    style={{ backgroundColor: palette.primary }}
+                    style={{ backgroundColor: primary }}
                   >
                     GS
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <h4 className={`text-xs font-bold truncate ${textColor}`}>Gustavo Silva</h4>
-                      <span className="text-[10px] font-bold text-emerald-600 bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-300 px-1.5 py-0.5 rounded-md">
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md" style={{ backgroundColor: `${accent}20`, color: accent }}>
                         92% Aderência
                       </span>
                     </div>
@@ -676,14 +684,14 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                     <div className="flex items-center gap-2 mt-1 text-[10px]">
                       <span className="text-slate-500">FC Máx: 188 bpm</span>
                       <span>•</span>
-                      <span className="text-blue-600 font-medium">Saúde: Consentido</span>
+                      <span className="font-medium" style={{ color: primary }}>Saúde: Consentido</span>
                     </div>
                   </div>
                 </div>
 
                 <div
-                  className={`p-3 rounded-2xl border ${borderColor} flex items-center gap-3 shadow-xs`}
-                  style={{ backgroundColor: surfaceBg }}
+                  className={`p-3 rounded-2xl border  flex items-center gap-3 shadow-xs`}
+                  style={{ backgroundColor: surfaceBg, borderColor: outline }}
                 >
                   <div
                     className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs text-white shrink-0"
@@ -702,14 +710,14 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                     <div className="flex items-center gap-2 mt-1 text-[10px]">
                       <span className="text-slate-500">VO2max: 54</span>
                       <span>•</span>
-                      <span className="text-emerald-600 font-medium">PIX em dia</span>
+                      <span className="font-medium" style={{ color: accent }}>PIX em dia</span>
                     </div>
                   </div>
                 </div>
 
                 <div
-                  className={`p-3 rounded-2xl border ${borderColor} flex items-center gap-3 shadow-xs opacity-80`}
-                  style={{ backgroundColor: surfaceBg }}
+                  className={`p-3 rounded-2xl border  flex items-center gap-3 shadow-xs opacity-80`}
+                  style={{ backgroundColor: surfaceBg, borderColor: outline }}
                 >
                   <div className="w-10 h-10 rounded-full bg-slate-500 flex items-center justify-center font-bold text-xs text-white shrink-0">
                     RP
@@ -732,12 +740,12 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
             <div className="flex flex-col gap-3.5">
               {/* Profile Bar */}
               <div
-                className={`p-3 rounded-2xl border ${borderColor} flex items-center gap-3 shadow-xs`}
-                style={{ backgroundColor: surfaceBg }}
+                className={`p-3 rounded-2xl border  flex items-center gap-3 shadow-xs`}
+                style={{ backgroundColor: surfaceBg, borderColor: outline }}
               >
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0"
-                  style={{ backgroundColor: palette.primary }}
+                  style={{ backgroundColor: primary }}
                 >
                   AP
                 </div>
@@ -753,15 +761,15 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                   Gestão Financeira & Cobrança PIX
                 </span>
                 <div
-                  className={`rounded-2xl border ${borderColor} divide-y ${borderColor} shadow-xs overflow-hidden`}
-                  style={{ backgroundColor: surfaceBg }}
+                  className={`rounded-2xl border  divide-y  shadow-xs overflow-hidden`}
+                  style={{ backgroundColor: surfaceBg, borderColor: outline }}
                 >
                   <div className="p-3 flex items-center justify-between">
                     <div>
                       <p className={`text-xs font-semibold ${textColor}`}>Régua de Inadimplência</p>
                       <p className={`text-[10px] ${subtextColor}`}>Carência de 5 dias pós-vencimento antes do bloqueio</p>
                     </div>
-                    <span className="text-[10px] font-bold text-blue-600 bg-blue-100 dark:bg-blue-950 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: `${primary}15`, color: primary }}>
                       5 Dias Carência
                     </span>
                   </div>
@@ -771,7 +779,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                       <p className={`text-xs font-semibold ${textColor}`}>Pagamento via QR Code PIX</p>
                       <p className={`text-[10px] ${subtextColor}`}>Baixa automática por Webhook instantâneo</p>
                     </div>
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                    <CheckCircle2 className="w-4 h-4" style={{ color: accent }} />
                   </div>
                 </div>
               </div>
@@ -782,8 +790,8 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                   Privacidade, Consentimento & LGPD
                 </span>
                 <div
-                  className={`rounded-2xl border ${borderColor} divide-y ${borderColor} shadow-xs overflow-hidden`}
-                  style={{ backgroundColor: surfaceBg }}
+                  className={`rounded-2xl border  divide-y  shadow-xs overflow-hidden`}
+                  style={{ backgroundColor: surfaceBg, borderColor: outline }}
                 >
                   <div className="p-3 flex items-center justify-between">
                     <div>
@@ -798,7 +806,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                       <p className={`text-xs font-semibold ${textColor}`}>Exportação de Dados</p>
                       <p className={`text-[10px] ${subtextColor}`}>Download ZIP (JSON, CSV, FIT e GPX)</p>
                     </div>
-                    <span className="text-[10px] font-bold text-teal-600 bg-teal-100 dark:bg-teal-950 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: `${accent}20`, color: accent }}>
                       Disponível
                     </span>
                   </div>
@@ -817,14 +825,14 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                 <input
                   type="text"
                   defaultValue="Intervalado de Tiro Limiar (6x800m)"
-                  className={`w-full text-xs px-3 py-2 rounded-xl border outline-none ${inputBg}`}
+                  className={`w-full text-xs px-3 py-2 rounded-xl border outline-none ${inputBg}`} style={{ borderColor: outline }}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className={`block text-[11px] font-semibold mb-1 ${subtextColor}`}>Modalidade</label>
-                  <select className={`w-full text-xs px-2.5 py-2 rounded-xl border outline-none ${inputBg}`}>
+                  <select className={`w-full text-xs px-2.5 py-2 rounded-xl border outline-none ${inputBg}`} style={{ borderColor: outline }}>
                     <option value="corrida">Corrida de Rua</option>
                     <option value="ciclismo">Ciclismo / Bike</option>
                     <option value="natacao">Natação</option>
@@ -832,7 +840,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                 </div>
                 <div>
                   <label className={`block text-[11px] font-semibold mb-1 ${subtextColor}`}>Métrica Principal</label>
-                  <select className={`w-full text-xs px-2.5 py-2 rounded-xl border outline-none ${inputBg}`}>
+                  <select className={`w-full text-xs px-2.5 py-2 rounded-xl border outline-none ${inputBg}`} style={{ borderColor: outline }}>
                     <option value="pace">Pace Limiar (min/km)</option>
                     <option value="fc">% Frequência Max</option>
                     <option value="potencia">Potência FTP (Watts)</option>
@@ -841,23 +849,23 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
               </div>
 
               {/* Zonas de Treino F-01 Card */}
-              <div className="p-3 rounded-xl bg-teal-50 dark:bg-slate-800 border border-teal-200 dark:border-slate-700 text-xs flex flex-col gap-1.5">
-                <div className="flex items-center justify-between font-bold text-teal-800 dark:text-teal-300">
+              <div className="p-3 rounded-xl border text-xs flex flex-col gap-1.5" style={{ backgroundColor: isDark ? surfaceBg : `${accent}15`, borderColor: outline }}>
+                <div className="flex items-center justify-between font-bold" style={{ color: isDark ? '#fff' : accent }}>
                   <span>🎯 Motor de Zonas Ativo</span>
-                  <span className="text-[10px] font-normal bg-teal-200 dark:bg-teal-900 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-normal px-2 py-0.5 rounded-full" style={{ backgroundColor: `${accent}30`, color: isDark ? '#fff' : '#000' }}>
                     Versão 2 (01/06)
                   </span>
                 </div>
                 <div className="grid grid-cols-3 gap-1 text-[10px] text-slate-700 dark:text-slate-300">
                   <div className="bg-white dark:bg-slate-900 p-1.5 rounded-md text-center">Z1 Recup: 5:40+</div>
-                  <div className="bg-white dark:bg-slate-900 p-1.5 rounded-md text-center font-bold text-teal-600">Z3 Limiar: 4:20-4:35</div>
+                  <div className="bg-white dark:bg-slate-900 p-1.5 rounded-md text-center font-bold" style={{ color: accent }}>Z3 Limiar: 4:20-4:35</div>
                   <div className="bg-white dark:bg-slate-900 p-1.5 rounded-md text-center">Z5 Tiro: &lt;3:50</div>
                 </div>
               </div>
 
               <button
                 className="w-full py-2.5 rounded-xl text-white text-xs font-bold shadow-md transition-all mt-1"
-                style={{ backgroundColor: palette.primary }}
+                style={{ backgroundColor: primary }}
               >
                 SALVAR E ATRIBUIR TREINO
               </button>
@@ -868,23 +876,23 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
             <div className="flex flex-col h-full gap-2.5">
               <div
                 className="p-2.5 rounded-xl text-[11px] flex items-center justify-between font-medium"
-                style={{ backgroundColor: `${palette.primary}15`, color: palette.primary }}
+                style={{ backgroundColor: `${primary}15`, color: primary }}
               >
                 <div className="flex items-center gap-1.5">
                   <Sparkles className="w-4 h-4 shrink-0" />
                   <span>Chat 1:1 Atleta ↔ Treinador</span>
                 </div>
-                <span className="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">Privado</span>
+                <span className="text-[9px] px-2 py-0.5 rounded-full font-bold" style={{ backgroundColor: `${accent}20`, color: accent }}>Privado</span>
               </div>
 
               <div className="flex-1 flex flex-col gap-2 overflow-y-auto max-h-[380px] pr-1">
-                <div className="p-2.5 rounded-2xl text-xs max-w-[90%] mr-auto border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 shadow-2xs">
-                  <p className="font-bold text-[10px] text-blue-600">Treinador Marcos:</p>
+                <div className="p-2.5 rounded-2xl text-xs max-w-[90%] mr-auto border bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 shadow-2xs" style={{ borderColor: outline }}>
+                  <p className="font-bold text-[10px]" style={{ color: primary }}>Treinador Marcos:</p>
                   <p className="mt-0.5">Ótimo treino hoje no intervalado! Manter o pace de 4:25 no 4º tiro foi essencial.</p>
                 </div>
 
-                <div className="p-2.5 rounded-2xl text-xs max-w-[90%] ml-auto text-white shadow-xs" style={{ backgroundColor: palette.primary }}>
-                  <p className="font-bold text-[10px] text-blue-100">Gustavo Silva:</p>
+                <div className="p-2.5 rounded-2xl text-xs max-w-[90%] ml-auto text-white shadow-xs" style={{ backgroundColor: primary }}>
+                  <p className="font-bold text-[10px] opacity-80">Gustavo Silva:</p>
                   <p className="mt-0.5">Valeu professor! Senti um pouco de desgaste na última repetição (RPE 8). FC média deu 172 bpm.</p>
                   <div className="mt-2 p-1.5 rounded-lg bg-white/20 text-[9px] flex items-center justify-between">
                     <span>🏃 10.2 km • 45min • RPE 8</span>
@@ -899,12 +907,12 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                   value={chatMessage}
                   onChange={(e) => setChatMessage(e.target.value)}
                   placeholder="Mensagem ou feedback sobre o treino..."
-                  className={`flex-1 text-xs px-3 py-2 rounded-xl border outline-none ${inputBg}`}
+                  className={`flex-1 text-xs px-3 py-2 rounded-xl border outline-none ${inputBg}`} style={{ borderColor: outline }}
                 />
                 <button
                   type="submit"
                   className="p-2 rounded-xl text-white shadow-xs"
-                  style={{ backgroundColor: palette.primary }}
+                  style={{ backgroundColor: primary }}
                 >
                   <Send className="w-4 h-4" />
                 </button>
@@ -929,14 +937,15 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
         {/* Bottom Navigation Bar */}
         {screenConfig.showBottomNav && (
           <div
-            className={`px-6 py-2 border-t ${borderColor} flex items-center justify-around sticky bottom-0 z-10`}
-            style={{ backgroundColor: surfaceBg }}
+            className={`px-6 py-2 border-t  flex items-center justify-around sticky bottom-0 z-10`}
+            style={{ backgroundColor: surfaceBg, borderColor: outline }}
           >
             <button
               onClick={() => setSelectedBottomNav(0)}
               className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold transition ${
-                selectedBottomNav === 0 ? 'text-blue-600 dark:text-blue-400' : subtextColor
+                selectedBottomNav === 0 ? '' : subtextColor
               }`}
+              style={{ color: selectedBottomNav === 0 ? primary : undefined }}
             >
               <Home className="w-5 h-5" />
               Início
@@ -944,8 +953,9 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
             <button
               onClick={() => setSelectedBottomNav(1)}
               className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold transition ${
-                selectedBottomNav === 1 ? 'text-blue-600 dark:text-blue-400' : subtextColor
+                selectedBottomNav === 1 ? '' : subtextColor
               }`}
+              style={{ color: selectedBottomNav === 1 ? primary : undefined }}
             >
               <BarChart3 className="w-5 h-5" />
               Métricas
@@ -953,8 +963,9 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
             <button
               onClick={() => setSelectedBottomNav(2)}
               className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold transition ${
-                selectedBottomNav === 2 ? 'text-blue-600 dark:text-blue-400' : subtextColor
+                selectedBottomNav === 2 ? '' : subtextColor
               }`}
+              style={{ color: selectedBottomNav === 2 ? primary : undefined }}
             >
               <User className="w-5 h-5" />
               Perfil

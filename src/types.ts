@@ -7,6 +7,7 @@ export interface PaletteOption {
   id: string;
   name: string;
   primary: string;
+  primaryDark: string;
   secondary: string;
   accentGreen: string;
   neutralGray: string;
@@ -14,6 +15,8 @@ export interface PaletteOption {
   surfaceDark: string;
   backgroundLight: string;
   backgroundDark: string;
+  outlineLight: string;
+  outlineDark: string;
 }
 
 export interface ScreenConfig {

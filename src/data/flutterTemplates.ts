@@ -3,56 +3,69 @@ import { DevicePlatform, PaletteOption, ScreenConfig, ThemeMode } from '../types
 export const COLOR_PALETTES: PaletteOption[] = [
   {
     id: 'luna',
-    name: 'Luna Ocean (Ciano & Azul)',
+    name: 'Luna Ocean (atual)',
     // primary/secondary definidos por contraste medido, não por gosto:
     // #26658C com texto branco = 6.32:1 (aprova WCAG AA)
-    // #54ACBF com texto branco = 2.62:1 (reprova) — serve como destaque, e como
-    // primary APENAS no tema escuro, onde contrasta 6.47:1 com o azul-noite.
+    // #54ACBF com texto branco = 2.62:1 (reprova) — por isso só no escuro.
     // Não inverter de volta.
-    primary: '#26658C',   // Azul Médio — ação primária no tema claro
-    secondary: '#54ACBF', // Ciano — destaque
-    accentGreen: '#A7EBF2', // Ciano Suave
-    neutralGray: '#023859', // Azul Escuro Slate
+    primary: '#26658C',
+    primaryDark: '#54ACBF',
+    secondary: '#54ACBF',
+    accentGreen: '#A7EBF2',
+    neutralGray: '#023859',
     surfaceLight: '#F7FAFC',
     surfaceDark: '#023859',
     backgroundLight: '#FCFDFE',
     backgroundDark: '#011C40',
+    outlineLight: '#7A8B99',
+    outlineDark: '#7E97AB',
   },
   {
-    id: 'material-blue-green',
-    name: 'Material 3 Azul & Verde',
-    primary: '#1E88E5', // Material Blue
-    secondary: '#2E7D32', // Emerald Green
-    accentGreen: '#4CAF50',
-    neutralGray: '#607D8B', // Slate / Blue Gray
-    surfaceLight: '#FFFFFF',
-    surfaceDark: '#1E293B',
-    backgroundLight: '#F8FAFC',
-    backgroundDark: '#0F172A',
+    id: 'ametista',
+    name: 'Ametista (roxo profundo)',
+    primary: '#5B21B6',
+    primaryDark: '#BFA3F5',
+    secondary: '#7C3AED',
+    accentGreen: '#C4A5FF',
+    neutralGray: '#271643',
+    surfaceLight: '#F2EDF9',
+    surfaceDark: '#271643',
+    backgroundLight: '#FCFAFD',
+    backgroundDark: '#170D2B',
+    outlineLight: '#79718C',
+    outlineDark: '#978BB2',
   },
   {
-    id: 'slate-blue-mint',
-    name: 'Azul Executivo & Menta',
-    primary: '#2563EB',
-    secondary: '#10B981',
-    accentGreen: '#34D399',
-    neutralGray: '#64748B',
-    surfaceLight: '#FFFFFF',
-    surfaceDark: '#1E293B',
-    backgroundLight: '#F1F5F9',
-    backgroundDark: '#090D16',
+    id: 'grafite',
+    name: 'Grafite & verde água',
+    primary: '#2B3E3A',
+    primaryDark: '#5FD6BC',
+    secondary: '#5FD6BC',
+    accentGreen: '#5FD6BC',
+    neutralGray: '#182725',
+    surfaceLight: '#EFF4F3',
+    surfaceDark: '#182725',
+    backgroundLight: '#FAFCFC',
+    backgroundDark: '#0E1918',
+    outlineLight: '#6B7B79',
+    outlineDark: '#879997',
   },
   {
-    id: 'cyber-green-blue',
-    name: 'Verde Floresta & Azul Céu',
-    primary: '#0D9488',
-    secondary: '#0284C7',
-    accentGreen: '#10B981',
-    neutralGray: '#475569',
-    surfaceLight: '#FFFFFF',
-    surfaceDark: '#111827',
-    backgroundLight: '#F0FDFA',
-    backgroundDark: '#030712',
+    id: 'deep-teal',
+    name: 'Deep Teal (petróleo)',
+    primary: '#206662',
+    primaryDark: '#2A7B76',
+    secondary: '#2A7B76',
+    accentGreen: '#139B75',
+    neutralGray: '#104046',
+    surfaceLight: '#E4EFEF',
+    surfaceDark: '#104046',
+    backgroundLight: '#F4F8F8',
+    backgroundDark: '#021F25',
+    // corrigidos: os valores originais do estudo davam 1.21:1 e 1.56:1,
+    // abaixo do mínimo de 3:1 para limite de controle.
+    outlineLight: '#7E9192',
+    outlineDark: '#557C80',
   },
 ];
 
