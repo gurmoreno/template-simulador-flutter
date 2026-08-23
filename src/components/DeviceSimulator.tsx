@@ -141,9 +141,10 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
   const textColor = isDark ? 'text-slate-100' : 'text-slate-900';
   const subtextColor = isDark ? 'text-slate-400' : 'text-slate-500';
   const borderColor = isDark ? 'border-slate-800' : 'border-slate-200';
-  const inputBg = isDark 
-    ? 'bg-slate-800 hover:bg-slate-700 text-slate-100 border-b border-transparent focus:border-[var(--theme-primary)] focus:bg-slate-800' 
-    : 'bg-slate-50 hover:bg-slate-100 text-slate-900 border-b border-transparent focus:border-[var(--theme-primary)] focus:bg-white';
+    const inputBg = 'border-b border-transparent focus:border-[var(--theme-primary)] transition';
+  const containerBg = isDark ? palette.surfaceDark : palette.surfaceLight;
+  const inkColor = isDark ? '#FFFFFF' : palette.backgroundDark;
+  const mutedColor = isDark ? palette.secondary : palette.neutralGray;
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -311,7 +312,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
         <div className={`flex-1 flex flex-col ${screenConfig.id === 'cadastro' ? '' : 'p-4 gap-4'}`}>
           {screenConfig.id === 'cadastro' && (
 
-            <div className="flex-1 flex flex-col relative overflow-hidden" style={{ backgroundColor: isDark ? palette.backgroundDark : '#FFFFFF' }}>
+            <div className="flex-1 flex flex-col relative overflow-hidden" style={{ backgroundColor: bodyBg }}>
               {/* Brand Header */}
               <div 
                 className="w-full flex flex-col items-center justify-center p-6 relative shrink-0"
@@ -342,9 +343,9 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                   className={`flex-1 py-2.5 text-center transition-colors border-b-2 ${
                     e1Mode === 'register'
                       ? ''
-                      : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+                      : 'border-transparent opacity-70 hover:opacity-100'
                   }`}
-                  style={e1Mode === 'register' ? { borderColor: primary, color: primary } : {}}
+                  style={e1Mode === 'register' ? { borderColor: primary, color: primary } : { color: mutedColor }}
                 >
                   Primeiro Cadastro
                 </button>
@@ -354,9 +355,9 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                   className={`flex-1 py-2.5 text-center transition-colors border-b-2 ${
                     e1Mode === 'login'
                       ? ''
-                      : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+                      : 'border-transparent opacity-70 hover:opacity-100'
                   }`}
-                  style={e1Mode === 'login' ? { borderColor: primary, color: primary } : {}}
+                  style={e1Mode === 'login' ? { borderColor: primary, color: primary } : { color: mutedColor }}
                 >
                   Acesso via Convite
                 </button>
@@ -370,36 +371,36 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
 
                   {/* Nome Completo */}
                   <div>
-                    <label className={`block text-[11px] font-medium mb-1 ${subtextColor}`}>
+                    <label className={`block text-[11px] font-medium mb-1 `} style={{ color: mutedColor }}>
                       Nome Completo <span className="text-rose-500">*</span>
                     </label>
                     <div className="relative">
-                      <User className="w-4 h-4 absolute left-2.5 top-2.5 text-slate-400" />
+                      <User className="w-4 h-4 absolute left-2.5 top-2.5" style={{ color: mutedColor }} />
                       <input
                         type="text"
                         value={fullName}
                         onChange={(e) => handleNameChange(e.target.value)}
                         placeholder="Ex: Gustavo Silva"
                         required
-                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline }}
+                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }}
                       />
                     </div>
                   </div>
 
                   {/* Handle Único @id_publico */}
                   <div>
-                    <label className={`block text-[11px] font-medium mb-1 ${subtextColor}`}>
+                    <label className={`block text-[11px] font-medium mb-1 `} style={{ color: mutedColor }}>
                       ID de usuário <span className="text-rose-500">*</span>
                     </label>
                     <div className="relative">
-                      <span className="absolute left-3 top-2 text-sm font-medium text-slate-400">@</span>
+                      <span className="absolute left-3 top-2 text-sm font-medium" style={{ color: mutedColor }}>@</span>
                       <input
                         type="text"
                         value={handle.replace(/^@/, '')}
                         onChange={(e) => setHandle(`@${e.target.value.toLowerCase().replace(/[^a-z0-9.]/g, '')}`)}
                         placeholder="gustavo.silva"
                         required
-                        className={`w-full text-sm pl-8 pr-24 py-2 rounded outline-none transition font-mono ${inputBg} ${!isHandleAvailable ? '!border-rose-400 focus:!border-rose-500' : ''}`} style={{ borderColor: !isHandleAvailable ? undefined : outline }}
+                        className={`w-full text-sm pl-8 pr-24 py-2 rounded outline-none transition font-mono ${inputBg} ${!isHandleAvailable ? '!border-rose-400 focus:!border-rose-500' : ''}`} style={{ borderColor: !isHandleAvailable ? undefined : outline, backgroundColor: containerBg, color: inkColor }}
                       />
                       {isHandleAvailable ? (
                         <span className="absolute right-2.5 top-2.5 text-[11px] font-medium" style={{ color: accent }}>
@@ -415,18 +416,18 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
 
                   {/* E-mail de Acesso */}
                   <div>
-                    <label className={`block text-[11px] font-medium mb-1 ${subtextColor}`}>
+                    <label className={`block text-[11px] font-medium mb-1 `} style={{ color: mutedColor }}>
                       E-mail de Acesso <span className="text-rose-500">*</span>
                     </label>
                     <div className="relative">
-                      <Mail className="w-4 h-4 absolute left-2.5 top-2.5 text-slate-400" />
+                      <Mail className="w-4 h-4 absolute left-2.5 top-2.5" style={{ color: mutedColor }} />
                       <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="gustavo.silva@exemplo.com"
                         required
-                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline }}
+                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }}
                       />
                     </div>
                   </div>
@@ -435,10 +436,10 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <label className={`block text-[11px] font-medium ${subtextColor}`}>
+                        <label className={`block text-[11px] font-medium `} style={{ color: mutedColor }}>
                           Nascimento <span className="text-rose-500">*</span>
                         </label>
-                        <span className={`text-[10px] font-medium ${isUnderage ? 'text-rose-500' : 'text-slate-400'}`}>
+                        <span className={`text-[10px] font-medium ${isUnderage ? 'text-rose-500' : ''}`} style={{ color: isUnderage ? undefined : mutedColor }}>
                           {userAge} anos
                         </span>
                       </div>
@@ -447,12 +448,12 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                         value={birthDate}
                         onChange={(e) => setBirthDate(e.target.value)}
                         required
-                        className={`w-full text-sm px-2.5 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline }}
+                        className={`w-full text-sm px-2.5 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }}
                       />
                     </div>
 
                     <div>
-                      <label className={`block text-[11px] font-medium mb-1 ${subtextColor}`}>
+                      <label className={`block text-[11px] font-medium mb-1 `} style={{ color: mutedColor }}>
                         Senha (min 8) <span className="text-rose-500">*</span>
                       </label>
                       <input
@@ -461,7 +462,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
                         required
-                        className={`w-full text-sm px-2.5 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline }}
+                        className={`w-full text-sm px-2.5 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }}
                       />
                     </div>
                   </div>
@@ -524,29 +525,29 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                 <div className="flex flex-col gap-4 py-2">
                   <div className="mb-2">
                     <h3 className={`text-[17px] font-semibold ${textColor}`}>Acesso & Ativação</h3>
-                    <p className={`text-[12px] ${subtextColor}`}>Acesse sua conta ou ative o convite da assessoria</p>
+                    <p className={`text-[12px] `} style={{ color: mutedColor }}>Acesse sua conta ou ative o convite da assessoria</p>
                   </div>
 
                   <div>
-                    <label className={`block text-[11px] font-medium mb-1 ${subtextColor}`}>E-mail</label>
+                    <label className={`block text-[11px] font-medium mb-1 `} style={{ color: mutedColor }}>E-mail</label>
                     <div className="relative">
-                      <Mail className="w-4 h-4 absolute left-2.5 top-2.5 text-slate-400" />
+                      <Mail className="w-4 h-4 absolute left-2.5 top-2.5" style={{ color: mutedColor }} />
                       <input
                         type="email"
                         placeholder="atleta@exemplo.com"
-                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline }}
+                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className={`block text-[11px] font-medium mb-1 ${subtextColor}`}>Senha</label>
+                    <label className={`block text-[11px] font-medium mb-1 `} style={{ color: mutedColor }}>Senha</label>
                     <div className="relative">
-                      <Lock className="w-4 h-4 absolute left-2.5 top-2.5 text-slate-400" />
+                      <Lock className="w-4 h-4 absolute left-2.5 top-2.5" style={{ color: mutedColor }} />
                       <input
                         type="password"
                         placeholder="••••••••"
-                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline }}
+                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }}
                       />
                     </div>
                   </div>
@@ -573,7 +574,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                     Entrar
                   </button>
 
-                  <div className="p-3 bg-slate-50 dark:bg-slate-900 border-l-2 text-[11px] text-slate-600 dark:text-slate-400 mt-2" style={{ borderColor: outline }}>
+                  <div className="p-3 border-l-2 text-[11px] mt-2" style={{ borderColor: outline, backgroundColor: containerBg, color: mutedColor }}>
                     <span className="font-medium">Ativação por convite:</span> Se você foi cadastrado pela assessoria, use o e-mail recebido para definir sua senha e acessar.
                   </div>
                 </div>
