@@ -163,7 +163,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[620px] p-4 bg-slate-100/70 dark:bg-slate-950/70 rounded-2xl border border-slate-200 dark:border-slate-800 relative overflow-hidden transition-colors" style={{ '--theme-primary': primary, '--theme-outline': outline, '--theme-secondary': secondary, '--theme-accent': accent } as React.CSSProperties}>
+    <div className="flex flex-col items-center justify-center min-h-[620px] p-4 bg-slate-50 rounded-2xl border border-slate-200 relative overflow-hidden transition-colors" style={{ '--theme-primary': primary, '--theme-outline': outline, '--theme-secondary': secondary, '--theme-accent': accent } as React.CSSProperties}>
       {/* Background Decorative Pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] opacity-[0.05] pointer-events-none" />
 
