@@ -29,11 +29,11 @@ const INITIAL_SCREENS: ScreenConfig[] = [
     title: 'Primeiro Cadastro',
     subtitle: 'Cadastro Autônomo do Atleta',
     iconName: 'UserPlus',
-    showAppBar: true,
+    showAppBar: false,
     showBottomNav: false,
     showFAB: false,
     showDrawer: false,
-    appBarTitle: 'Acesso & Convites',
+    appBarTitle: 'Acessos',
   },
   {
     id: 'custom',
