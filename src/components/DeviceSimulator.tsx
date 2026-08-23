@@ -35,6 +35,24 @@ interface DeviceSimulatorProps {
   onToggleTheme: () => void;
 }
 
+
+const getLuminance = (hex) => {
+  const rgb = parseInt(hex.slice(1), 16);
+  const r = (rgb >> 16) & 0xff;
+  const g = (rgb >>  8) & 0xff;
+  const b = (rgb >>  0) & 0xff;
+  const a = [r, g, b].map(v => {
+    v /= 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+};
+const getContrast = (hex1, hex2) => {
+  const l1 = getLuminance(hex1) + 0.05;
+  const l2 = getLuminance(hex2) + 0.05;
+  return l1 > l2 ? l1 / l2 : l2 / l1;
+};
+
 export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
   platform,
   themeMode,
@@ -111,6 +129,10 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
   const primary = themeMode === 'dark' ? palette.primaryDark : palette.primary;
   const outline = themeMode === 'dark' ? palette.outlineDark : palette.outlineLight;
   const secondary = palette.secondary;
+  const onPrimary = themeMode === 'dark'
+    ? (palette.id === 'deep-teal' ? '#FFFFFF' : palette.backgroundDark)
+    : '#FFFFFF';
+  const headerSupportColor = getContrast(palette.primary, palette.secondary) >= 4.5 ? palette.secondary : 'rgba(255, 255, 255, 0.8)';
   const accent = palette.accentGreen;
 
   // Surface colors according to palette and light/dark theme
@@ -172,7 +194,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
             </div>
 
             {/* App Screen View */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col">
+            <div className="flex-1 overflow-y-auto scrollbar-hide flex flex-col">
               {renderAppScreen()}
             </div>
 
@@ -212,7 +234,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
             </div>
 
             {/* App Screen View */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col">
+            <div className="flex-1 overflow-y-auto scrollbar-hide flex flex-col">
               {renderAppScreen()}
             </div>
 
@@ -247,7 +269,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
           </div>
 
           {/* Web Desktop Canvas */}
-          <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col" style={{ backgroundColor: bodyBg }}>
+          <div className="flex-1 overflow-y-auto scrollbar-hide flex flex-col" style={{ backgroundColor: bodyBg }}>
             {renderAppScreen()}
           </div>
         </div>
@@ -286,9 +308,32 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
         )}
 
         {/* Screen Content according to active screenConfig.id */}
-        <div className="flex-1 p-4 flex flex-col gap-4">
+        <div className={`flex-1 flex flex-col ${screenConfig.id === 'cadastro' ? '' : 'p-4 gap-4'}`}>
           {screenConfig.id === 'cadastro' && (
-            <div className="flex-1 flex flex-col py-2 px-1 gap-4">
+
+            <div className="flex-1 flex flex-col relative overflow-hidden" style={{ backgroundColor: isDark ? palette.backgroundDark : '#FFFFFF' }}>
+              {/* Brand Header */}
+              <div 
+                className="w-full flex flex-col items-center justify-center p-6 relative shrink-0"
+                style={{ backgroundColor: palette.primary, height: '30%' }}
+              >
+                <div className="w-12 h-12 bg-white/20 rounded-xl mb-4 flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">RF</span>
+                </div>
+                <h1 className="text-white font-bold text-2xl mb-1">Bem-vindo</h1>
+                <p className="text-xs text-center" style={{ color: headerSupportColor }}>
+                  Acesse sua assessoria esportiva
+                </p>
+              </div>
+
+              {/* Overlapping Layer */}
+              <div 
+                className="flex-1 flex flex-col -mt-4 rounded-t-[18px] relative z-10 px-4 py-2 min-h-0"
+                style={{ backgroundColor: isDark ? palette.backgroundDark : '#FFFFFF' }}
+              >
+                <div className="w-[34px] h-[4px] rounded-full mx-auto my-3" style={{ backgroundColor: outline, opacity: 0.3 }} />
+                
+                <div className="flex-1 flex flex-col gap-4 overflow-y-auto pb-6 scrollbar-hide min-h-0">
               {/* Clean underline tabs */}
               <div className="flex border-b text-xs font-medium" style={{ borderColor: outline }}>
                 <button
@@ -435,7 +480,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                       id="terms"
                       checked={termsAccepted}
                       onChange={(e) => setTermsAccepted(e.target.checked)}
-                      className="mt-0.5 rounded-sm focus:ring-0" style={{ color: primary, accentColor: primary }}
+                      className="mt-0.5 rounded-sm focus:ring-0" style={{ color: onPrimary, accentColor: primary }}
                     />
                     <label htmlFor="terms" className={`text-[11px] leading-snug cursor-pointer ${textColor}`}>
                       Li e concordo com os Termos de Uso e Política de Privacidade.
@@ -446,10 +491,10 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                   <button
                     type="submit"
                     disabled={!termsAccepted || isUnderage || !isHandleAvailable}
-                    className={`w-full py-2.5 rounded text-white text-[13px] font-medium transition-opacity mt-2 ${
+                    className={`w-full py-2.5 rounded text-[13px] font-medium transition-opacity mt-2 ${
                       !termsAccepted || isUnderage || !isHandleAvailable ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'
                     }`}
-                    style={{ backgroundColor: primary }}
+                    style={{ backgroundColor: primary, color: onPrimary }}
                   >
                     Concluir cadastro
                   </button>
@@ -512,7 +557,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                         type="checkbox"
                         checked={rememberMe}
                         onChange={(e) => setRememberMe(e.target.checked)}
-                        className="rounded-sm focus:ring-0" style={{ color: primary, accentColor: primary }}
+                        className="rounded-sm focus:ring-0" style={{ color: onPrimary, accentColor: primary }}
                       />
                       Lembrar meu acesso
                     </label>
@@ -522,8 +567,8 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                   </div>
 
                   <button
-                    className="w-full py-2.5 rounded text-white text-[13px] font-medium transition-opacity hover:opacity-90 mt-3"
-                    style={{ backgroundColor: primary }}
+                    className="w-full py-2.5 rounded text-[13px] font-medium transition-opacity hover:opacity-90 mt-3"
+                    style={{ backgroundColor: primary, color: onPrimary }}
                   >
                     Entrar
                   </button>
@@ -533,8 +578,11 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                   </div>
                 </div>
               )}
+                </div>
+              </div>
             </div>
           )}
+
 
           {screenConfig.id === 'dashboard' && (
             <div className="flex flex-col gap-3.5">
