@@ -1,7 +1,7 @@
 export type DevicePlatform = 'android' | 'ios' | 'web';
 export type ThemeMode = 'light' | 'dark';
 
-export type ScreenType = 'cadastro' | 'login' | 'dashboard' | 'products' | 'settings' | 'form' | 'chat' | 'custom';
+export type ScreenType = 'padroes' | 'login' | 'dashboard' | 'products' | 'settings' | 'form' | 'chat' | 'custom';
 
 export interface PaletteOption {
   id: string;

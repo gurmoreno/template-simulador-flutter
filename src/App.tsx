@@ -25,15 +25,15 @@ import {
 
 const INITIAL_SCREENS: ScreenConfig[] = [
   {
-    id: 'cadastro',
-    title: 'Primeiro Cadastro',
-    subtitle: 'Cadastro Autônomo do Atleta',
-    iconName: 'UserPlus',
+    id: 'padroes',
+    title: 'Padrões',
+    subtitle: 'Componentes do design system',
+    iconName: 'Palette',
     showAppBar: false,
     showBottomNav: false,
     showFAB: false,
     showDrawer: false,
-    appBarTitle: 'Acessos',
+    appBarTitle: 'Padrões',
   },
   {
     id: 'custom',
@@ -53,7 +53,7 @@ export default function App() {
   const [themeMode, setThemeMode] = useState<ThemeMode>('light');
   const [activePalette, setActivePalette] = useState<PaletteOption>(COLOR_PALETTES[0]);
   const [activeView, setActiveView] = useState<'prototype' | 'code'>('prototype');
-  const [activeScreenId, setActiveScreenId] = useState<ScreenType>('cadastro');
+  const [activeScreenId, setActiveScreenId] = useState<ScreenType>('padroes');
   const [screens, setScreens] = useState<ScreenConfig[]>(INITIAL_SCREENS);
 
   const [isAiPromptOpen, setIsAiPromptOpen] = useState(false);

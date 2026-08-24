@@ -1,30 +1,39 @@
 import React, { useState } from 'react';
 import { DevicePlatform, PaletteOption, ScreenConfig, ThemeMode } from '../types';
-import {
-  Wifi,
-  Battery,
-  Signal,
-  Search,
-  Plus,
-  Home,
-  BarChart3,
+import { 
+  Smartphone, 
+  Tablet, 
+  Monitor, 
+  RefreshCw, 
+  WifiOff,
+  CheckCircle2,
+  PlaySquare,
+  FileText,
+  Activity,
+  MessageSquare,
   User,
-  Settings,
+  Search,
+  ChevronRight,
+  Calendar,
+  Clock,
+  MapPin,
   Mail,
   Lock,
-  Menu,
-  ChevronRight,
-  Star,
-  CheckCircle2,
-  Send,
   Sun,
   Moon,
-  ArrowRight,
-  Sparkles,
-  Smartphone,
-  Tablet,
+  AlertTriangle,
+  XCircle,
+  Info,
+  Signal,
+  Wifi,
+  Battery,
   Globe,
-  Monitor
+  Menu,
+  Sparkles,
+  Send,
+  Plus,
+  Home,
+  BarChart3
 } from 'lucide-react';
 
 interface DeviceSimulatorProps {
@@ -61,7 +70,6 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
   onToggleTheme,
 }) => {
   const [selectedBottomNav, setSelectedBottomNav] = useState(0);
-  const [rememberMe, setRememberMe] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [chatMessage, setChatMessage] = useState('');
   const [chatHistory, setChatHistory] = useState([
@@ -70,58 +78,10 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
     { sender: 'ai', text: 'No Flutter, basta definir darkTheme: ThemeData(...) e alterar ThemeMode!' },
   ]);
 
-  // E1-01 Cadastro Autônomo States
-  const [e1Mode, setE1Mode] = useState<'register' | 'login'>('register');
-  const [fullName, setFullName] = useState('Gustavo Silva');
-  const [handle, setHandle] = useState('@gustavo.silva');
-  const [email, setEmail] = useState('gustavo.silva@exemplo.com');
-  const [birthDate, setBirthDate] = useState('1998-05-14');
-  const [password, setPassword] = useState('Senha1234');
-  const [termsAccepted, setTermsAccepted] = useState(true);
-  const [registrationStatus, setRegistrationStatus] = useState<'idle' | 'success' | 'email_exists' | 'underage'>('idle');
 
-  const handleNameChange = (val: string) => {
-    setFullName(val);
-    const slug = val
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9]/g, '.');
-    if (slug) {
-      setHandle(`@${slug}`);
-    } else {
-      setHandle('@');
-    }
-  };
 
-  const calculateAge = (dateStr: string) => {
-    if (!dateStr) return 25;
-    const birth = new Date(dateStr);
-    const today = new Date();
-    let age = today.getFullYear() - birth.getFullYear();
-    const m = today.getMonth() - birth.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-      age--;
-    }
-    return age;
-  };
 
-  const userAge = calculateAge(birthDate);
-  const isUnderage = userAge < 18;
-  const isHandleAvailable = handle !== '@existente';
 
-  const handleRegisterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isUnderage) {
-      setRegistrationStatus('underage');
-      return;
-    }
-    if (email.toLowerCase().includes('existente')) {
-      setRegistrationStatus('email_exists');
-      return;
-    }
-    setRegistrationStatus('success');
-  };
 
   const isDark = themeMode === 'dark';
 
@@ -310,10 +270,9 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
 
         {/* Screen Content according to active screenConfig.id */}
         <div className={`flex-1 flex flex-col ${screenConfig.id === 'cadastro' ? '' : 'p-4 gap-4'}`}>
-          {screenConfig.id === 'cadastro' && (
-
+          {screenConfig.id === 'padroes' && (
             <div className="flex-1 flex flex-col relative overflow-hidden" style={{ backgroundColor: bodyBg }}>
-              {/* Brand Header */}
+              {/* a) ESTRUTURA - Faixa de Marca */}
               <div 
                 className="w-full flex flex-col items-center justify-center p-6 relative shrink-0"
                 style={{ backgroundColor: palette.primary, height: '30%' }}
@@ -321,270 +280,138 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                 <div className="w-12 h-12 bg-white/20 rounded-xl mb-4 flex items-center justify-center">
                   <span className="text-white font-bold text-lg">RF</span>
                 </div>
-                <h1 className="text-white font-bold text-2xl mb-1">Bem-vindo</h1>
+                <h1 className="text-white font-bold text-2xl mb-1">Padrões</h1>
                 <p className="text-xs text-center" style={{ color: headerSupportColor }}>
-                  Acesse sua assessoria esportiva
+                  Componentes do design system
                 </p>
               </div>
 
-              {/* Overlapping Layer */}
+              {/* Camada sobreposta */}
               <div 
                 className="flex-1 flex flex-col -mt-4 rounded-t-[18px] relative z-10 px-4 py-2 min-h-0"
                 style={{ backgroundColor: isDark ? palette.backgroundDark : '#FFFFFF' }}
               >
-                <div className="w-[34px] h-[4px] rounded-full mx-auto my-3" style={{ backgroundColor: outline, opacity: 0.3 }} />
+                <div className="w-[34px] h-[4px] rounded-full mx-auto my-3 shrink-0" style={{ backgroundColor: outline, opacity: 0.3 }} />
                 
-                <div className="flex-1 flex flex-col gap-4 overflow-y-auto pb-6 scrollbar-hide min-h-0">
-              {/* Clean underline tabs */}
-              <div className="flex border-b text-xs font-medium" style={{ borderColor: outline }}>
-                <button
-                  type="button"
-                  onClick={() => setE1Mode('register')}
-                  className={`flex-1 py-2.5 text-center transition-colors border-b-2 ${
-                    e1Mode === 'register'
-                      ? ''
-                      : 'border-transparent opacity-70 hover:opacity-100'
-                  }`}
-                  style={e1Mode === 'register' ? { borderColor: primary, color: primary } : { color: mutedColor }}
-                >
-                  Primeiro Cadastro
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setE1Mode('login')}
-                  className={`flex-1 py-2.5 text-center transition-colors border-b-2 ${
-                    e1Mode === 'login'
-                      ? ''
-                      : 'border-transparent opacity-70 hover:opacity-100'
-                  }`}
-                  style={e1Mode === 'login' ? { borderColor: primary, color: primary } : { color: mutedColor }}
-                >
-                  Acesso via Convite
-                </button>
-              </div>
-
-              {e1Mode === 'register' ? (
-                <form onSubmit={handleRegisterSubmit} className="flex flex-col gap-3.5">
-                  <div className="mb-1">
-                    <h3 className={`text-[17px] font-semibold ${textColor}`}>Criar conta de atleta</h3>
-                  </div>
-
-                  {/* Nome Completo */}
-                  <div>
-                    <label className={`block text-[11px] font-medium mb-1 `} style={{ color: mutedColor }}>
-                      Nome Completo <span className="text-rose-500">*</span>
-                    </label>
-                    <div className="relative">
-                      <User className="w-4 h-4 absolute left-2.5 top-2.5" style={{ color: mutedColor }} />
-                      <input
-                        type="text"
-                        value={fullName}
-                        onChange={(e) => handleNameChange(e.target.value)}
-                        placeholder="Ex: Gustavo Silva"
-                        required
-                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Handle Único @id_publico */}
-                  <div>
-                    <label className={`block text-[11px] font-medium mb-1 `} style={{ color: mutedColor }}>
-                      ID de usuário <span className="text-rose-500">*</span>
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-2 text-sm font-medium" style={{ color: mutedColor }}>@</span>
-                      <input
-                        type="text"
-                        value={handle.replace(/^@/, '')}
-                        onChange={(e) => setHandle(`@${e.target.value.toLowerCase().replace(/[^a-z0-9.]/g, '')}`)}
-                        placeholder="gustavo.silva"
-                        required
-                        className={`w-full text-sm pl-8 pr-24 py-2 rounded outline-none transition font-mono ${inputBg} ${!isHandleAvailable ? '!border-rose-400 focus:!border-rose-500' : ''}`} style={{ borderColor: !isHandleAvailable ? undefined : outline, backgroundColor: containerBg, color: inkColor }}
-                      />
-                      {isHandleAvailable ? (
-                        <span className="absolute right-2.5 top-2.5 text-[11px] font-medium" style={{ color: accent }}>
-                          Disponível
-                        </span>
-                      ) : (
-                        <span className="absolute right-2.5 top-2.5 text-[11px] font-medium text-rose-600 dark:text-rose-500">
-                          Indisponível
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* E-mail de Acesso */}
-                  <div>
-                    <label className={`block text-[11px] font-medium mb-1 `} style={{ color: mutedColor }}>
-                      E-mail de Acesso <span className="text-rose-500">*</span>
-                    </label>
-                    <div className="relative">
-                      <Mail className="w-4 h-4 absolute left-2.5 top-2.5" style={{ color: mutedColor }} />
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="gustavo.silva@exemplo.com"
-                        required
-                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Grid: Data de Nascimento + Senha */}
-                  <div className="grid grid-cols-2 gap-3">
+                <div className="flex-1 overflow-y-auto pb-6 scrollbar-hide flex flex-col gap-8 pt-2">
+                  
+                  {/* b) CAMPOS */}
+                  <div className="flex flex-col gap-3">
+                    <h2 className="text-[13px] font-bold" style={{ color: textColor }}>Campos de Formulário</h2>
+                    
                     <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <label className={`block text-[11px] font-medium `} style={{ color: mutedColor }}>
-                          Nascimento <span className="text-rose-500">*</span>
-                        </label>
-                        <span className={`text-[10px] font-medium ${isUnderage ? 'text-rose-500' : ''}`} style={{ color: isUnderage ? undefined : mutedColor }}>
-                          {userAge} anos
-                        </span>
-                      </div>
-                      <input
-                        type="date"
-                        value={birthDate}
-                        onChange={(e) => setBirthDate(e.target.value)}
-                        required
-                        className={`w-full text-sm px-2.5 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }}
-                      />
+                      <label className="block text-[11px] font-medium mb-1" style={{ color: mutedColor }}>Neutro</label>
+                      <input type="text" placeholder="Placeholder" className={`w-full text-sm px-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }} />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-[11px] font-medium mb-1" style={{ color: primary }}>Foco</label>
+                      <input type="text" placeholder="Placeholder" className={`w-full text-sm px-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: primary, backgroundColor: containerBg, color: inkColor }} />
                     </div>
 
                     <div>
-                      <label className={`block text-[11px] font-medium mb-1 `} style={{ color: mutedColor }}>
-                        Senha (min 8) <span className="text-rose-500">*</span>
-                      </label>
-                      <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        required
-                        className={`w-full text-sm px-2.5 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* RN-02 Age Alert */}
-                  {isUnderage && (
-                    <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border-l-2 border-rose-500 text-[11px] text-rose-700 dark:text-rose-300">
-                      O cadastro autônomo é restrito a maiores de 18 anos.
-                    </div>
-                  )}
-
-                  {/* Terms Checkbox */}
-                  <div className="flex items-start gap-2 mt-1">
-                    <input
-                      type="checkbox"
-                      id="terms"
-                      checked={termsAccepted}
-                      onChange={(e) => setTermsAccepted(e.target.checked)}
-                      className="mt-0.5 rounded-sm focus:ring-0" style={{ color: onPrimary, accentColor: primary }}
-                    />
-                    <label htmlFor="terms" className={`text-[11px] leading-snug cursor-pointer ${textColor}`}>
-                      Li e concordo com os Termos de Uso e Política de Privacidade.
-                    </label>
-                  </div>
-
-                  {/* Submit Button */}
-                  <button
-                    type="submit"
-                    disabled={!termsAccepted || isUnderage || !isHandleAvailable}
-                    className={`w-full py-2.5 rounded text-[13px] font-medium transition-opacity mt-2 ${
-                      !termsAccepted || isUnderage || !isHandleAvailable ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'
-                    }`}
-                    style={{ backgroundColor: primary, color: onPrimary }}
-                  >
-                    Concluir cadastro
-                  </button>
-
-                  {/* Registration Status Feedback */}
-                  {registrationStatus === 'success' && (
-                    <div className="p-3 border-l-2 text-[11px] flex flex-col gap-1 animate-fadeIn mt-2" style={{ backgroundColor: `${accent}15`, borderColor: accent, color: isDark ? '#E3ECF2' : '#011C40' }}>
-                      <div className="font-medium flex items-center gap-1.5">
-                        <CheckCircle2 className="w-4 h-4" style={{ color: accent }} /> Conta criada com sucesso
+                      <label className="block text-[11px] font-medium mb-1" style={{ color: mutedColor }}>Verificando</label>
+                      <div className="relative">
+                        <input type="text" placeholder="Placeholder" className={`w-full text-sm px-3 py-2 pr-8 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }} />
+                        <div className="absolute right-3 top-2.5 w-3.5 h-3.5 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: `${primary} transparent ${primary} ${primary}` }} />
                       </div>
-                      <p className="opacity-90">
-                        Handle <strong className="font-mono">{handle}</strong> reservado. Instruções enviadas para {email}.
-                      </p>
                     </div>
-                  )}
 
-                  {registrationStatus === 'email_exists' && (
-                    <div className="p-3 bg-amber-50 dark:bg-amber-950/40 border-l-2 border-amber-500 text-[11px] text-amber-800 dark:text-amber-200 flex flex-col gap-1 mt-2">
-                      <div className="font-medium">E-mail já possui cadastro</div>
-                      <p className="opacity-90">
-                        Enviamos instruções de acesso para seu e-mail, preservando seu histórico esportivo existente.
-                      </p>
+                    <div>
+                      <label className="block text-[11px] font-medium mb-1" style={{ color: mutedColor }}>Disponível</label>
+                      <div className="relative">
+                        <input type="text" placeholder="Placeholder" className={`w-full text-sm px-3 py-2 pr-8 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }} />
+                        <span className="absolute right-2.5 top-2.5 text-[11px] font-medium" style={{ color: accent }}>Disponível</span>
+                      </div>
                     </div>
-                  )}
-                </form>
-              ) : (
-                <div className="flex flex-col gap-4 py-2">
-                  <div className="mb-2">
-                    <h3 className={`text-[17px] font-semibold ${textColor}`}>Acesso & Ativação</h3>
-                    <p className={`text-[12px] `} style={{ color: mutedColor }}>Acesse sua conta ou ative o convite da assessoria</p>
-                  </div>
 
-                  <div>
-                    <label className={`block text-[11px] font-medium mb-1 `} style={{ color: mutedColor }}>E-mail</label>
-                    <div className="relative">
-                      <Mail className="w-4 h-4 absolute left-2.5 top-2.5" style={{ color: mutedColor }} />
-                      <input
-                        type="email"
-                        placeholder="atleta@exemplo.com"
-                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }}
-                      />
+                    <div>
+                      <label className="block text-[11px] font-medium mb-1 text-rose-500">Erro</label>
+                      <input type="text" placeholder="Placeholder" className={`w-full text-sm px-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: '#f43f5e', backgroundColor: containerBg, color: inkColor }} />
+                    </div>
+
+                    <div className="opacity-50">
+                      <label className="block text-[11px] font-medium mb-1" style={{ color: mutedColor }}>Desabilitado</label>
+                      <input type="text" placeholder="Placeholder" disabled className={`w-full text-sm px-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }} />
                     </div>
                   </div>
 
-                  <div>
-                    <label className={`block text-[11px] font-medium mb-1 `} style={{ color: mutedColor }}>Senha</label>
-                    <div className="relative">
-                      <Lock className="w-4 h-4 absolute left-2.5 top-2.5" style={{ color: mutedColor }} />
-                      <input
-                        type="password"
-                        placeholder="••••••••"
-                        className={`w-full text-sm pl-9 pr-3 py-2 rounded outline-none transition ${inputBg}`} style={{ borderColor: outline, backgroundColor: containerBg, color: inkColor }}
-                      />
+                  {/* c) BOTÕES */}
+                  <div className="flex flex-col gap-3">
+                    <h2 className="text-[13px] font-bold" style={{ color: textColor }}>Botões</h2>
+                    <div className="flex items-center gap-2">
+                      <button className="flex-1 py-2.5 rounded text-[13px] font-medium" style={{ backgroundColor: primary, color: onPrimary }}>Primário</button>
+                      <button className="flex-1 py-2.5 rounded text-[13px] font-medium border" style={{ borderColor: primary, color: primary, backgroundColor: 'transparent' }}>Secundário</button>
+                      <button className="flex-1 py-2.5 rounded text-[13px] font-medium" style={{ color: primary, backgroundColor: 'transparent' }}>Terciário</button>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button className="flex-1 py-2.5 rounded text-[13px] font-medium opacity-50 cursor-not-allowed" style={{ backgroundColor: primary, color: onPrimary }}>Primário Inativo</button>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px] mt-1">
-                    <label className={`flex items-center gap-1.5 cursor-pointer ${textColor}`}>
-                      <input
-                        type="checkbox"
-                        checked={rememberMe}
-                        onChange={(e) => setRememberMe(e.target.checked)}
-                        className="rounded-sm focus:ring-0" style={{ color: onPrimary, accentColor: primary }}
-                      />
-                      Lembrar meu acesso
-                    </label>
-                    <span className="font-medium cursor-pointer hover:underline" style={{ color: primary }}>
-                      Esqueceu a senha?
-                    </span>
+                  {/* d) CORES SEMÂNTICAS */}
+                  <div className="flex flex-col gap-3">
+                    <h2 className="text-[13px] font-bold" style={{ color: textColor }}>Cores Semânticas</h2>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="flex items-center gap-2 p-2 rounded text-[11px] font-medium" style={{ backgroundColor: isDark ? '#6FD79E20' : '#1B7A4B20', color: isDark ? '#6FD79E' : '#1B7A4B' }}>
+                         <CheckCircle2 className="w-4 h-4" /> Sucesso
+                      </div>
+                      <div className="flex items-center gap-2 p-2 rounded text-[11px] font-medium" style={{ backgroundColor: isDark ? '#F0C06020' : '#8A5A0020', color: isDark ? '#F0C060' : '#8A5A00' }}>
+                         <AlertTriangle className="w-4 h-4" /> Aviso
+                      </div>
+                      <div className="flex items-center gap-2 p-2 rounded text-[11px] font-medium" style={{ backgroundColor: isDark ? '#F2B8B520' : '#B3261E20', color: isDark ? '#F2B8B5' : '#B3261E' }}>
+                         <XCircle className="w-4 h-4" /> Erro
+                      </div>
+                      <div className="flex items-center gap-2 p-2 rounded text-[11px] font-medium" style={{ backgroundColor: isDark ? '#A9BECD20' : '#5A6B7A20', color: isDark ? '#A9BECD' : '#5A6B7A' }}>
+                         <Info className="w-4 h-4" /> Neutro
+                      </div>
+                    </div>
                   </div>
 
-                  <button
-                    className="w-full py-2.5 rounded text-[13px] font-medium transition-opacity hover:opacity-90 mt-3"
-                    style={{ backgroundColor: primary, color: onPrimary }}
-                  >
-                    Entrar
-                  </button>
-
-                  <div className="p-3 border-l-2 text-[11px] mt-2" style={{ borderColor: outline, backgroundColor: containerBg, color: mutedColor }}>
-                    <span className="font-medium">Ativação por convite:</span> Se você foi cadastrado pela assessoria, use o e-mail recebido para definir sua senha e acessar.
+                  {/* e) ZONAS DE TREINO */}
+                  <div className="flex flex-col gap-3">
+                    <h2 className="text-[13px] font-bold" style={{ color: textColor }}>Zonas de Treino</h2>
+                    <div className="flex items-center overflow-hidden rounded text-[10px] text-white font-medium text-center">
+                      <div className="flex-1 py-2 px-1" style={{ backgroundColor: '#2563EB' }}>Recup.</div>
+                      <div className="flex-1 py-2 px-1" style={{ backgroundColor: '#0E7490' }}>Gordura</div>
+                      <div className="flex-1 py-2 px-1" style={{ backgroundColor: '#15803D' }}>Aeróbico</div>
+                      <div className="flex-1 py-2 px-1" style={{ backgroundColor: '#B45309' }}>Limiar</div>
+                      <div className="flex-1 py-2 px-1" style={{ backgroundColor: '#C2410C' }}>Anaerob.</div>
+                      <div className="flex-1 py-2 px-1" style={{ backgroundColor: '#E11D48' }}>Potência</div>
+                    </div>
                   </div>
-                </div>
-              )}
+
+                  {/* f) TIPOGRAFIA */}
+                  <div className="flex flex-col gap-3">
+                    <h2 className="text-[13px] font-bold" style={{ color: textColor }}>Tipografia</h2>
+                    <div className="flex flex-col gap-3" style={{ color: textColor }}>
+                      <div className="flex items-baseline justify-between"><span className="text-2xl font-bold">Headline</span> <span className="text-[10px]" style={{ color: mutedColor }}>headlineSmall</span></div>
+                      <div className="flex items-baseline justify-between"><span className="text-xl font-semibold">Title Large</span> <span className="text-[10px]" style={{ color: mutedColor }}>titleLarge</span></div>
+                      <div className="flex items-baseline justify-between"><span className="text-base font-medium">Title Medium</span> <span className="text-[10px]" style={{ color: mutedColor }}>titleMedium</span></div>
+                      <div className="flex items-baseline justify-between"><span className="text-sm">Body Large - Texto longo</span> <span className="text-[10px]" style={{ color: mutedColor }}>bodyLarge</span></div>
+                      <div className="flex items-baseline justify-between"><span className="text-xs">Body Medium - Texto padrão</span> <span className="text-[10px]" style={{ color: mutedColor }}>bodyMedium</span></div>
+                      <div className="flex items-baseline justify-between"><span className="text-[11px]">Body Small - Texto menor</span> <span className="text-[10px]" style={{ color: mutedColor }}>bodySmall</span></div>
+                      <div className="flex items-baseline justify-between"><span className="text-[11px] font-bold uppercase tracking-wider">Label Large</span> <span className="text-[10px]" style={{ color: mutedColor }}>labelLarge</span></div>
+                    </div>
+                  </div>
+
+                  {/* g) ESPAÇAMENTO */}
+                  <div className="flex flex-col gap-3">
+                    <h2 className="text-[13px] font-bold" style={{ color: textColor }}>Espaçamento</h2>
+                    <div className="flex flex-col gap-2" style={{ color: textColor }}>
+                      {[4, 8, 16, 24, 32, 48, 64].map((space) => (
+                        <div key={space} className="flex items-center gap-3">
+                          <span className="text-[10px] w-6 text-right" style={{ color: mutedColor }}>{space}</span>
+                          <div className="h-4 rounded-sm" style={{ width: space, backgroundColor: primary }} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
           )}
-
-
           {screenConfig.id === 'dashboard' && (
             <div className="flex flex-col gap-3.5">
               {/* Header Greeting */}
