@@ -269,7 +269,7 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
         )}
 
         {/* Screen Content according to active screenConfig.id */}
-        <div className={`flex-1 flex flex-col ${screenConfig.id === 'cadastro' ? '' : 'p-4 gap-4'}`}>
+        <div className={`flex-1 flex flex-col ${screenConfig.id === 'padroes' ? '' : 'p-4 gap-4'}`}>
           {screenConfig.id === 'padroes' && (
             <div className="flex-1 flex flex-col relative overflow-hidden" style={{ backgroundColor: bodyBg }}>
               {/* a) ESTRUTURA - Faixa de Marca */}
