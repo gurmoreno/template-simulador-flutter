@@ -271,10 +271,10 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
         {/* Screen Content according to active screenConfig.id */}
         <div className={`flex-1 flex flex-col ${screenConfig.id === 'padroes' ? '' : 'p-4 gap-4'}`}>
           {screenConfig.id === 'padroes' && (
-            <div className="flex-1 flex flex-col relative overflow-hidden" style={{ backgroundColor: bodyBg }}>
-              {/* a) ESTRUTURA - Faixa de Marca */}
-              <div 
-                className="w-full flex flex-col items-center justify-center p-6 relative shrink-0"
+            <div className="flex-1 relative overflow-hidden" style={{ backgroundColor: bodyBg }}>
+              {/* a) ESTRUTURA - Faixa de Marca: fica parada ao fundo, e a folha rola por cima */}
+              <div
+                className="absolute inset-x-0 top-0 flex flex-col items-center justify-center p-6"
                 style={{ backgroundColor: palette.primary, height: '30%' }}
               >
                 <div className="w-12 h-12 bg-white/20 rounded-xl mb-4 flex items-center justify-center">
@@ -286,15 +286,14 @@ export const DeviceSimulator: React.FC<DeviceSimulatorProps> = ({
                 </p>
               </div>
 
-              {/* Camada sobreposta */}
-              <div 
-                className="flex-1 flex flex-col -mt-4 rounded-t-[18px] relative z-10 px-4 py-2 min-h-0"
-                style={{ backgroundColor: isDark ? palette.backgroundDark : '#FFFFFF' }}
-              >
-                <div className="w-[34px] h-[4px] rounded-full mx-auto my-3 shrink-0" style={{ backgroundColor: outline, opacity: 0.3 }} />
-                
-                <div className="flex-1 overflow-y-auto pb-6 scrollbar-hide flex flex-col gap-8 pt-2">
-                  
+              {/* Folha: rola inteira sobre a faixa. Sem alça: alça só em painel que arrasta. */}
+              <div className="absolute inset-0 overflow-y-auto scrollbar-hide">
+                <div aria-hidden="true" style={{ height: 'calc(30% - 16px)' }} />
+                <div
+                  className="min-h-full rounded-t-[18px] relative px-4 pt-8 pb-6 flex flex-col gap-8"
+                  style={{ backgroundColor: isDark ? palette.backgroundDark : '#FFFFFF' }}
+                >
+
                   {/* b) CAMPOS */}
                   <div className="flex flex-col gap-3">
                     <h2 className="text-[13px] font-bold" style={{ color: textColor }}>Campos de Formulário</h2>
