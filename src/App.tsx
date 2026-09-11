@@ -136,7 +136,7 @@ export default function App() {
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-teal-500" />
                   <span>
-                    <strong>Paleta M3:</strong> Luna Ocean (#54ACBF, #26658C, #011C40)
+                    <strong>Paleta M3:</strong> Ametista (#5B21B6, #BFA3F5, #170D2B)
                   </span>
                 </li>
                 <li className="flex items-center gap-2">
